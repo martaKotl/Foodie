@@ -24,7 +24,6 @@ public class UserController {
     public ResponseEntity<User> createUser(@PathVariable final int id, @RequestBody final User user) {
         user.setId(id);      //jak nie db działać to to też usunąć
         final User savedUser = userService.createUser(user);
-        final ResponseEntity<User> response = new ResponseEntity<User>(savedUser, HttpStatus.CREATED);
-        return response;
+        return new ResponseEntity<User>(savedUser, HttpStatus.CREATED);
     }
 }
