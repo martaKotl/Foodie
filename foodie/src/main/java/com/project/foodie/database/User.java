@@ -11,11 +11,17 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class User {
-    private int id;
+    private Integer id;
+
     private String email;
+
     private String username;
+
     private String password;
+
     private Boolean isActive;
+
     private Date registrationDate;
+
     private Date activationDate;
 }

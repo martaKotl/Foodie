@@ -1,8 +1,6 @@
 package com.project.foodie.database;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
@@ -16,11 +14,20 @@ import java.util.Date;
 @Getter @Setter
 public class UserEntity {
     @Id
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     private String email;
+
     private String username;
+
     private String password;
+
     private Boolean isActive;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date registrationDate;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date activationDate;
 }
