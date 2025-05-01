@@ -1,6 +1,6 @@
 package com.project.foodie.administration.implementation;
 
-import com.project.foodie.administration.RegisterMessage;
+import com.project.foodie.administration.ResultMessage;
 import com.project.foodie.administration.UserService;
 import com.project.foodie.database.User;
 import com.project.foodie.database.UserEntity;
@@ -36,33 +36,33 @@ public class UserServiceImplementation implements UserService {
 
     @Transactional
     @Override
-    public RegisterMessage registerUser(User user) {
+    public ResultMessage registerUser(User user) {
         String message;
         if(userRepository.existsById(user.getId())) {
             message = "User with id " + user.getId() + " already exists";
-            return new RegisterMessage(message, false);
+            return new ResultMessage(message, false);
         }
         else if(user.getPassword().length() < 8){
             message = "Password must be at least 8 characters long";
-            return new RegisterMessage(message, false);
+            return new ResultMessage(message, false);
         }
         else if(!Pattern.compile("\\d").matcher(user.getPassword()).find()){
             message = "Password must contain at least one digit";
-            return new RegisterMessage(message, false);
+            return new ResultMessage(message, false);
         }
         else if(!Pattern.compile("[a-zA-Z]").matcher(user.getPassword()).find()){
             message = "Password must contain at least one letter";
-            return new RegisterMessage(message, false);
+            return new ResultMessage(message, false);
         }
         else if(!Pattern.compile("[^a-zA-Z0-9]").matcher(user.getPassword()).find()){
             message = "Password must contain at least one special character";
-            return new RegisterMessage(message, false);
+            return new ResultMessage(message, false);
         }
         else {
             createUser(user);
             message = "Your account has been created: please check " +
                     "your email and click the activation link to be able to use your account.";
-            return new RegisterMessage(message, true);
+            return new ResultMessage(message, true);
         }
     }
 

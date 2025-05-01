@@ -6,5 +6,5 @@ public interface UserService {
 
     User createUser(User user);
 
-    RegisterMessage registerUser(User user);
+    ResultMessage registerUser(User user);
 }
