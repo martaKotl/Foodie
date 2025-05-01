@@ -2,12 +2,7 @@ package com.project.foodie.database;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -16,7 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @Getter @Setter
-public class UserEntity implements UserDetails {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,43 +21,17 @@ public class UserEntity implements UserDetails {
 
     private String username;
 
+    @Column(name = "password_hash", nullable = false)
     private String password;
 
+    @Column(name = "is_active")
     private Boolean isActive;
 
+    @Column(name = "registration_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date registrationDate;
 
+    @Column(name = "activation_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date activationDate;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(); // lub np. List.of(new SimpleGrantedAuthority("ROLE_USER"))
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return isActive != null && isActive;
-    }
 }

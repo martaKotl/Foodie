@@ -5,9 +5,7 @@ import com.project.foodie.administration.UserService;
 import com.project.foodie.database.User;
 import com.project.foodie.database.UserEntity;
 import com.project.foodie.database.UserRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.regex.Pattern;
@@ -22,19 +20,16 @@ public class UserServiceImplementation implements UserService {
         this.userRepository = userRepository;
     }
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
-    @Transactional
+
     @Override
     public User createUser(final User user) {
         final UserEntity userEntity = userToUserEntity(user);
-        userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
         final UserEntity savedUserEntity = userRepository.save(userEntity);
         return userEntityToUser(savedUserEntity);
     }
 
-    @Transactional
+
     @Override
     public ResultMessage registerUser(User user) {
         String message;

@@ -1,23 +1,30 @@
 package com.project.foodie.database;
 
-import com.project.foodie.configuration.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api")
 public class UserController {
 
-    private final AuthenticationService authService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserController(AuthenticationService authService) {
-        this.authService = authService;
+    public UserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/register")
-    public AuthenticationResponse register(@RequestBody RegisterRequest request) {
-        return authService.register(request);
-    }
+    public ResponseEntity<String> register(@RequestBody UserEntity user) {
+        user.setIsActive(false);
+        user.setRegistrationDate(new Date());
 
+        userRepository.save(user);
+
+        return ResponseEntity.ok("User registered successfully.");
+    }
 }
+
