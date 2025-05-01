@@ -3,8 +3,8 @@ package com.project.foodie.administration;
 import lombok.Getter;
 import lombok.Setter;
 
+@Getter @Setter
 public class ResultMessage {
-    @Getter @Setter
     public String message;
     public Boolean success;
 
