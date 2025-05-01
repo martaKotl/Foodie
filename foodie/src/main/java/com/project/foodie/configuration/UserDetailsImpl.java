@@ -1,40 +1,19 @@
-package com.project.foodie.database;
+package com.project.foodie.configuration;
 
-import jakarta.persistence.*;
-import lombok.*;
+import com.project.foodie.database.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Entity
-@Table(name = "users")
-@Getter @Setter
-public class UserEntity implements UserDetails {
+public class UserDetailsImpl implements UserDetails {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private final UserEntity user;
 
-    private String email;
-
-    private String username;
-
-    private String password;
-
-    private Boolean isActive;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date registrationDate;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date activationDate;
+    public UserDetailsImpl(UserEntity user) {
+        this.user = user;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -42,8 +21,13 @@ public class UserEntity implements UserDetails {
     }
 
     @Override
+    public String getPassword() {
+        return user.getPassword();
+    }
+
+    @Override
     public String getUsername() {
-        return email;
+        return user.getEmail();
     }
 
     @Override
@@ -63,6 +47,6 @@ public class UserEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return isActive != null && isActive;
+        return user.getIsActive();
     }
 }
