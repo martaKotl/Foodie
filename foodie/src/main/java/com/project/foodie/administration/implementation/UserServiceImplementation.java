@@ -5,6 +5,7 @@ import com.project.foodie.administration.UserService;
 import com.project.foodie.database.User;
 import com.project.foodie.database.UserEntity;
 import com.project.foodie.database.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class UserServiceImplementation implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Transactional
     @Override
     public User createUser(final User user) {
         final UserEntity userEntity = userToUserEntity(user);
@@ -32,6 +34,7 @@ public class UserServiceImplementation implements UserService {
         return userEntityToUser(savedUserEntity);
     }
 
+    @Transactional
     @Override
     public RegisterMessage registerUser(User user) {
         String message;
