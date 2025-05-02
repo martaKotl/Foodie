@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.regex.Pattern;
+import org.mindrot.jbcrypt.BCrypt;
 
 @Service
 public class UserServiceImplementation implements UserService {
@@ -61,6 +62,9 @@ public class UserServiceImplementation implements UserService {
         else {
             user.setIsActive(false);
             user.setRegistrationDate(new Date());
+
+            String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+            user.setPassword(hashedPassword);
 
             createUser(user);
 
