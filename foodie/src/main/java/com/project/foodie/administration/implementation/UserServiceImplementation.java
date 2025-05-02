@@ -8,6 +8,7 @@ import com.project.foodie.database.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.regex.Pattern;
 
 @Service
@@ -33,8 +34,12 @@ public class UserServiceImplementation implements UserService {
     @Override
     public ResultMessage registerUser(User user) {
         String message;
-        if(userRepository.existsById(user.getId())) {
-            message = "User with id " + user.getId() + " already exists";
+        if (user.getEmail() != null && userRepository.findByEmail(user.getEmail()).isPresent()) {
+            message = "User with email " + user.getEmail() + " already exists";
+            return new ResultMessage(message, false);
+        }
+        else if(user.getUsername() != null && userRepository.findByUsername(user.getUsername()).isPresent()){
+            message = "User with username " + user.getUsername() + " already exists";
             return new ResultMessage(message, false);
         }
         else if(user.getPassword().length() < 8){
@@ -54,9 +59,14 @@ public class UserServiceImplementation implements UserService {
             return new ResultMessage(message, false);
         }
         else {
+            user.setIsActive(false);
+            user.setRegistrationDate(new Date());
+
             createUser(user);
+
             message = "Your account has been created: please check " +
                     "your email and click the activation link to be able to use your account.";
+
             return new ResultMessage(message, true);
         }
     }
