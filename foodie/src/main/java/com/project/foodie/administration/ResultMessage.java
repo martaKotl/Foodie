@@ -5,8 +5,8 @@ import lombok.Setter;
 
 @Getter @Setter
 public class ResultMessage {
-    public String message;
-    public Boolean success;
+    private String message;
+    private Boolean success;
 
     public ResultMessage(String message, Boolean success) {
         this.message = message;

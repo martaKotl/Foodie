@@ -1,14 +1,14 @@
 package com.project.foodie.administration.implementation;
 
+import com.project.foodie.administration.EmailService;
 import com.project.foodie.administration.ResultMessage;
 import com.project.foodie.administration.UserService;
-import com.project.foodie.database.User;
-import com.project.foodie.database.UserEntity;
-import com.project.foodie.database.UserRepository;
+import com.project.foodie.database.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.UUID;
 import java.util.regex.Pattern;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -21,6 +21,12 @@ public class UserServiceImplementation implements UserService {
     public UserServiceImplementation(final UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
+    @Autowired
+    private VerificationTokenRepository tokenRepository;
+
+    @Autowired
+    private EmailService emailService;
 
 
 
@@ -67,6 +73,18 @@ public class UserServiceImplementation implements UserService {
             user.setPassword(hashedPassword);
 
             createUser(user);
+
+            UserEntity createdUserEntity = userRepository.findByEmail(user.getEmail()).orElseThrow();
+
+            String token = UUID.randomUUID().toString();
+            VerificationTokenEntity verificationToken = VerificationTokenEntity.builder()
+                    .token(token)
+                    .user(createdUserEntity)
+                    .expiryDate(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000)) // Token jest ważny 24h
+                    .build();
+            tokenRepository.save(verificationToken);
+
+            emailService.sendVerificationEmail(user.getEmail(), token);
 
             message = "Your account has been created: please check " +
                     "your email and click the activation link to be able to use your account.";

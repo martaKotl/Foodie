@@ -6,6 +6,10 @@ class UserService {
     registerUser(user){
         return axios.post(`${Foodie_base_URL}/register`, user);
     }
+
+    activateAccount(token){
+        return axios.get(`${Foodie_base_URL}/activate`, token);
+    }
 }
 
 export default new UserService();

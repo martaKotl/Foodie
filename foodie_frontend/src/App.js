@@ -1,6 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import './App.css';
-import Register from './component/Register';
+
+import Register from './components/Register';
+import VerifyAccount from "./components/VerifyAccount";
 
 function App() {
   return (
@@ -9,6 +11,7 @@ function App() {
       <Routes>
         <Route index element={<Register />} />
         <Route path="/" element={<Register />} />
+        <Route path="/verify" element={<VerifyAccount />} />
       </Routes>
     </BrowserRouter>
     </div>
