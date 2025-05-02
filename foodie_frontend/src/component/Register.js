@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import UserService from '../services/UserService';
 
 function Register() {
 
@@ -39,17 +40,8 @@ function Register() {
       };
       
     try {
-      const response = await fetch('http://localhost:8080/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-      console.log("Raw response:", response);
-
-      const result = await response.json();
-      console.log("Parsed JSON:", result);
+      const response = await UserService.registerUser(payload);
+      const result = response.data;
 
       if (result.success) {
         setMessage(result.message);
@@ -59,9 +51,15 @@ function Register() {
         setError(result.message);
         setMessage('');
       }
+     
     } catch (err) {
       console.error("Registration error:", err);
-      setError("An error occurred while registering. Please try again.");
+      if (err.response && err.response.data) {
+        setError(err.response.data.message || "Unexpected error ocurred.");
+      } else {
+        setError("No connection with a server.");
+      }
+      setMessage('');
     }
   };
 
@@ -124,13 +122,20 @@ function Register() {
         </div>
 
         {error && (
-          <div className="text-red-600 text-lg font-semibold text-center mt-4">{error}</div>)}
+          <div className="text-red-600 text-lg font-semibold text-center mt-4 my-2">{error}</div>)}
         {message && (
-          <div className="text-green-600 text-lg font-semibold text-center mt-4">{message}</div>)}
+          <div className="text-green-600 text-lg font-semibold text-center mt-4 my-2">{message}</div>)}
 
-        <button type="submit" className="register-btn text-2xl rounded bg-green-600 text-white hover:bg-green-700 font-semibold px-3 py-2 mx-96">
+        <button type="button"
+          onClick={() => navigate("/login")}
+          className="register-btn text-2xl rounded bg-red-600 text-white hover:bg-red-700 font-semibold px-5 py-2 mx-32 my-2">
+          Cancel
+        </button>
+        <button type="submit" 
+          className="register-btn text-2xl rounded bg-green-600 text-white hover:bg-green-700 font-semibold px-3 py-2 my-2">
           Register
         </button>
+        
       </form>
     </div>
   );
