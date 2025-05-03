@@ -74,6 +74,22 @@ public class UserServiceImplementation implements UserService {
             return new ResultMessage(message, true);
         }
     }
+    @Override
+    public ResultMessage loginUser(String email, String plainPassword) {
+        return userRepository.findByEmail(email)
+                .map(userEntity -> {
+                    if (BCrypt.checkpw(plainPassword, userEntity.getPassword())) {
+                        if (!userEntity.getIsActive()) {
+                            return new ResultMessage("Account is not activated.", false);
+                        }
+                        return new ResultMessage("Login successful.", true);
+                    } else {
+                        return new ResultMessage("Incorrect password.", false);
+                    }
+                })
+                .orElse(new ResultMessage("User with email \"" +email+ "\" not found", false));
+
+    }
 
     private UserEntity userToUserEntity(User user) {
         return UserEntity.builder()
