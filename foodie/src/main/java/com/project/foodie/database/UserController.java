@@ -64,7 +64,6 @@ public class UserController {
         user.setIsActive(true);
         user.setActivationDate(new Date());
         userRepository.save(user);
-        tokenRepository.delete(verificationToken);
 
         return ResponseEntity.ok(new ResultMessage("Account activated successfully!", true));
     }

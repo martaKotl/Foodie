@@ -10,7 +10,7 @@ const VerifyAccount = () => {
     useEffect(() => {
         const verifyToken = async () => {
             try {
-                const response = await UserService.activateAccount({ params: { token } });
+                const response = await UserService.activateAccount(token);
                 const result = response.data;
 
                 if (result.success) {

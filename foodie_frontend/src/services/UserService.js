@@ -8,7 +8,7 @@ class UserService {
     }
 
     activateAccount(token){
-        return axios.get(`${Foodie_base_URL}/activate`, token);
+        return axios.get(`${Foodie_base_URL}/activate`, { params: { token } });
     }
 }
 
