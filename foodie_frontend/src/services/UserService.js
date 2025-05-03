@@ -6,6 +6,11 @@ class UserService {
     registerUser(user){
         return axios.post(`${Foodie_base_URL}/register`, user);
     }
+
+    loginUser(email, password) {
+        console.log(email, password)
+        return axios.post(`${Foodie_base_URL}/login`, { email, password });
+    }
 }
 
 export default new UserService();

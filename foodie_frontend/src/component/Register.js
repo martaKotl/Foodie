@@ -46,7 +46,7 @@ function Register() {
       if (result.success) {
         setMessage(result.message);
         setError('');
-        setTimeout(() => navigate('/login'), 3000);
+        setTimeout(() => navigate('/'), 3000);
       } else {
         setError(result.message);
         setMessage('');
@@ -127,7 +127,7 @@ function Register() {
           <div className="text-green-600 text-lg font-semibold text-center mt-4 my-2">{message}</div>)}
 
         <button type="button"
-          onClick={() => navigate("/login")}
+          onClick={() => navigate("/")}
           className="register-btn text-2xl rounded bg-red-600 text-white hover:bg-red-700 font-semibold px-5 py-2 mx-32 my-2">
           Cancel
         </button>
