@@ -7,4 +7,6 @@ public interface UserService {
     User createUser(User user);
 
     ResultMessage registerUser(User user);
+
+    ResultMessage loginUser(String email, String plainPassword);
 }
