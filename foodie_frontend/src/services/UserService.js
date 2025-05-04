@@ -7,6 +7,10 @@ class UserService {
         return axios.post(`${Foodie_base_URL}/register`, user);
     }
 
+    activateAccount(token){
+        return axios.get(`${Foodie_base_URL}/activate`, { params: { token } });
+    }
+
     loginUser(email, password) {
         console.log(email, password)
         return axios.post(`${Foodie_base_URL}/login`, { email, password });
