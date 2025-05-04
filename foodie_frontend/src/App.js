@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import './App.css';
 
-import Register from './components/Register';
-import VerifyAccount from "./components/VerifyAccount";
+import Register from './component/Register';
+import VerifyAccount from "./component/VerifyAccount";
 
 function App() {
   return (
