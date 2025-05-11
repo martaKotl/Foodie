@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import UserService from '../services/UserService';
 
 function Login() {
   const [formData, setFormData] = useState({ email: '', password: '' });
-  const [error, setError] = useState(''); 
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -17,13 +17,18 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     const { email, password } = formData;
-  
+
     UserService.loginUser(email, password)
       .then((response) => {
-        console.log('Login successful:', response.data);
-        navigate('/home');              // DO ZMIANY
+        if (response.data.success) {
+          localStorage.setItem('userId', response.data.userId);
+          console.log('Login successful:', response.data);
+          navigate('/home');
+        } else {
+          setError(response.data.message || 'Login failed');
+        }
       })
       .catch((error) => {
         if (error.response) {
@@ -40,8 +45,8 @@ function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
+    <div className="flex items-center justify-center min-h-screen" style={{ backgroundColor: '#ffeab2' }}>
+      <div className="w-full max-w-md p-8">
         <div className="text-4xl text-slate-700 font-medium text-center mb-8">Log in</div>
         <form onSubmit={handleSubmit}>
           <div className="text-gray-700 font-medium text-lg space-y-6">
@@ -89,9 +94,8 @@ function Login() {
             </button>
           </div>
 
-          
           {error && (
-            <div className="mt-4 text-center text-red-600 font-medium">
+            <div className="mt-4 text-center text-red-600 font-medium text-[18px] whitespace-nowrap" >
               {error}
             </div>
           )}
@@ -102,4 +106,3 @@ function Login() {
 }
 
 export default Login;
-

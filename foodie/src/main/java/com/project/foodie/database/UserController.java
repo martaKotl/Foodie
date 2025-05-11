@@ -1,5 +1,6 @@
 package com.project.foodie.database;
 
+import com.project.foodie.administration.LoginResponse;
 import com.project.foodie.administration.ResultMessage;
 import com.project.foodie.administration.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Map;
-
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -23,10 +23,10 @@ public class UserController {
 
     @Autowired
     public UserController(UserService userService, UserRepository userRepository, VerificationTokenRepository tokenRepository) {
-        this.userService = userService;
-        this.userRepository = userRepository;
-        this.tokenRepository = tokenRepository;
-    }
+            this.userService = userService;
+            this.userRepository = userRepository;
+            this.tokenRepository = tokenRepository;
+        }
 
     @PostMapping("/register")
     public ResponseEntity<ResultMessage> register(@RequestBody User user) {
@@ -42,7 +42,6 @@ public class UserController {
             return ResponseEntity.badRequest().body(result);
         }
     }
-
 
     @GetMapping("/activate")
     public ResponseEntity<ResultMessage> activateAccount(@RequestParam String token) {
@@ -71,25 +70,25 @@ public class UserController {
 
         return ResponseEntity.ok(new ResultMessage("Account activated successfully!", true));
     }
-  
+
     @PostMapping("/login")
-    public ResponseEntity<ResultMessage> login(@RequestBody Map<String, String> loginRequest)
+    public ResponseEntity<LoginResponse> login(@RequestBody Map<String, String> loginRequest)
     {
         String email = loginRequest.get("email");
         String password = loginRequest.get("password");
 
         if (email == null || password == null){
-            return ResponseEntity.badRequest().body(new ResultMessage("Wrong input!", false));
+            return ResponseEntity.badRequest().body(new LoginResponse(false, "Wrong input!", null));
         }
 
         ResultMessage result = userService.loginUser(email, password);
 
         if (result.getSuccess()) {
-            return ResponseEntity.ok(result);
+            Integer userId = userService.getUserIdByEmail(email);
+            return ResponseEntity.ok(new LoginResponse(true, result.getMessage(), userId));
         } else {
-            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse(false, result.getMessage(), null));
         }
-
     }
 }
 

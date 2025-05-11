@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import org.mindrot.jbcrypt.BCrypt;
@@ -108,6 +109,12 @@ public class UserServiceImplementation implements UserService {
                 .orElse(new ResultMessage("User with email \"" +email+ "\" not found", false));
 
     }
+
+    public Integer getUserIdByEmail(String email) {
+        Optional<UserEntity> user = userRepository.findByEmail(email);
+        return user.map(UserEntity::getId).orElse(null);
+    }
+
 
     private UserEntity userToUserEntity(User user) {
         return UserEntity.builder()
