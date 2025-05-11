@@ -9,4 +9,6 @@ public interface UserService {
     ResultMessage registerUser(User user);
 
     ResultMessage loginUser(String email, String plainPassword);
+
+    Integer getUserIdByEmail(String email);
 }

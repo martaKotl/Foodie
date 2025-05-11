@@ -1,22 +1,31 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import './App.css';
 
 import Register from './component/Register';
 import VerifyAccount from "./component/VerifyAccount";
 import Login from "./component/Login";
+import HomePage from "./component/HomePage";
+import AddMeal from "./component/AddMeal";
+
+const ProtectedRoute = ({ children }) => {
+  const isAuthenticated = !!localStorage.getItem('userId');
+  return isAuthenticated ? children : <Navigate to="/" replace />;
+};
 
 
 function App() {
   return (
     <div className="">
       <BrowserRouter>
-      <Routes>
-        <Route index element={<Login />} />
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/verify" element={<VerifyAccount />} />
-      </Routes>
-    </BrowserRouter>
+        <Routes>
+          <Route index element={<Login />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/verify" element={<VerifyAccount />} />
+          <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+          <Route path="/home/add_a_meal" element={<ProtectedRoute><AddMeal /></ProtectedRoute>} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

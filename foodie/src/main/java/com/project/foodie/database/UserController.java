@@ -1,5 +1,6 @@
 package com.project.foodie.database;
 
+import com.project.foodie.administration.LoginResponse;
 import com.project.foodie.administration.ResultMessage;
 import com.project.foodie.administration.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,9 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.Optional;
 import java.util.Map;
-
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -18,14 +17,10 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
-    private final VerificationTokenRepository tokenRepository;
 
     @Autowired
-    public UserController(UserService userService, UserRepository userRepository, VerificationTokenRepository tokenRepository) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.userRepository = userRepository;
-        this.tokenRepository = tokenRepository;
     }
 
     @PostMapping("/register")
@@ -43,53 +38,24 @@ public class UserController {
         }
     }
 
-
-    @GetMapping("/activate")
-    public ResponseEntity<ResultMessage> activateAccount(@RequestParam String token) {
-
-        Optional<VerificationTokenEntity> optionalToken = tokenRepository.findByToken(token);
-
-        if (optionalToken.isEmpty()) {
-            return ResponseEntity.badRequest().body(new ResultMessage("Invalid token", false));
-        }
-
-        VerificationTokenEntity verificationToken = optionalToken.get();
-
-        if (verificationToken.getExpiryDate().before(new Date())) {
-            return ResponseEntity.badRequest().body(new ResultMessage("Token expired", false));
-        }
-
-        UserEntity user = verificationToken.getUser();
-
-        if (user.getIsActive()) {
-            return ResponseEntity.ok(new ResultMessage("Account is already active", true));
-        }
-
-        user.setIsActive(true);
-        user.setActivationDate(new Date());
-        userRepository.save(user);
-
-        return ResponseEntity.ok(new ResultMessage("Account activated successfully!", true));
-    }
-  
     @PostMapping("/login")
-    public ResponseEntity<ResultMessage> login(@RequestBody Map<String, String> loginRequest)
+    public ResponseEntity<LoginResponse> login(@RequestBody Map<String, String> loginRequest)
     {
         String email = loginRequest.get("email");
         String password = loginRequest.get("password");
 
         if (email == null || password == null){
-            return ResponseEntity.badRequest().body(new ResultMessage("Wrong input!", false));
+            return ResponseEntity.badRequest().body(new LoginResponse(false, "Wrong input!", null));
         }
 
         ResultMessage result = userService.loginUser(email, password);
 
         if (result.getSuccess()) {
-            return ResponseEntity.ok(result);
+            Integer userId = userService.getUserIdByEmail(email);
+            return ResponseEntity.ok(new LoginResponse(true, result.getMessage(), userId));
         } else {
-            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse(false, result.getMessage(), null));
         }
-
     }
 }
 

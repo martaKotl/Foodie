@@ -1,0 +1,139 @@
+
+body {
+  margin: 30px;
+  text-align: center;
+  justify-content: center;
+  background-color: #ffeab2;
+  color: #8b0000;
+  font-family: monospace;
+  font-size: 28px;
+  line-height: 0.6;
+}
+
+#fot {
+  color: #8b0000;
+}
+
+
+#logout {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background-color: #8b0000;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+#logout:hover {
+  background-color: #a80000;
+}
+
+
+#idcals {
+  width: 400px;  
+  height: 400px;  
+}
+
+header {
+  display: flex;
+  justify-content: center;  
+  align-items: center;      
+  flex-direction: column;   
+}
+
+#logo {
+  width: 150px; 
+  height: auto;
+  margin-top: 20px;
+  margin-bottom: 20px; 
+}
+
+header h1 {
+  font-size: 48px;  /* Make the "FOODIE" title larger */
+  font-weight: bold; /* Make the title bold */
+  margin: 0;
+}
+
+table th {
+  font-size: 16px; /* Reduce the font size of the table headers */
+  font-weight: normal; /* Remove boldness from table headers */
+}
+
+table td {
+  font-size: 18px; /* Adjust the font size of table data if needed */
+}
+
+
+#diagrams {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.cals {
+  width: 500px;
+  height: 500px;
+}
+
+.macro {
+  width: 150px;
+  height: 150px;
+}
+
+.macrocharts {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+table {
+  width: 500px;
+  height: 30px;
+  margin: 0;
+  text-align: center;
+}
+
+.add-meal-button {
+  margin: 50px 0 5px 0;
+  padding: 10px 20px;
+  background-color: #36a2eb;
+  color: #8b0000;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-meal-button:hover {
+  background-color: #2b8cd1;
+}
+
+table {
+  border-collapse: collapse;
+  width: 80%;
+  margin: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5px;
+}
+
+th, td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #6d2c2c;
+}
+
+.input-box {
+  width: 100px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 4px 8px;
+  box-sizing: border-box;
+}
