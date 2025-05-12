@@ -19,15 +19,18 @@ body {
   position: absolute;
   top: 20px;
   right: 20px;
-  padding: 10px 20px;
   background-color: #8b0000;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  border: 1px solid #333;
+  border-radius: 15px;
+  padding: 15px 40px;
   font-size: 18px;
-}
-
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: bold;
+  width: auto;
+  color: white
+}     
+    
 #logout:hover {
   background-color: #a80000;
 }
@@ -53,18 +56,18 @@ header {
 }
 
 header h1 {
-  font-size: 48px;  /* Make the "FOODIE" title larger */
-  font-weight: bold; /* Make the title bold */
+  font-size: 48px; 
+  font-weight: bold; 
   margin: 0;
 }
 
 table th {
-  font-size: 16px; /* Reduce the font size of the table headers */
-  font-weight: normal; /* Remove boldness from table headers */
+  font-size: 16px; 
+  font-weight: normal; 
 }
 
 table td {
-  font-size: 18px; /* Adjust the font size of table data if needed */
+  font-size: 18px; 
 }
 
 

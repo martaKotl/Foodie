@@ -1,6 +1,5 @@
 package com.project.foodie.database;
 
-import com.project.foodie.administration.LoginResponse;
 import com.project.foodie.administration.ResultMessage;
 import com.project.foodie.administration.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,23 +71,29 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody Map<String, String> loginRequest)
-    {
+    public ResponseEntity<ResultMessage> login(@RequestBody Map<String, String> loginRequest) {
         String email = loginRequest.get("email");
         String password = loginRequest.get("password");
 
-        if (email == null || password == null){
-            return ResponseEntity.badRequest().body(new LoginResponse(false, "Wrong input!", null));
+        if (email == null || password == null) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new ResultMessage("Wrong input!", false));
         }
 
         ResultMessage result = userService.loginUser(email, password);
 
         if (result.getSuccess()) {
             Integer userId = userService.getUserIdByEmail(email);
-            return ResponseEntity.ok(new LoginResponse(true, result.getMessage(), userId));
+            return ResponseEntity.ok(new ResultMessage(result.getMessage(), true, userId));
         } else {
-            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse(false, result.getMessage(), null));
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(new ResultMessage(result.getMessage(), false));
         }
     }
+
 }
+
+
 

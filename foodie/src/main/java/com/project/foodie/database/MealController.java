@@ -2,10 +2,6 @@ package com.project.foodie.database;
 
 import com.project.foodie.administration.MealService;
 import com.project.foodie.administration.ResultMessage;
-import com.project.foodie.database.MealEntity;
-import org.hibernate.Hibernate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +48,7 @@ public class MealController {
         try {
             List<MealEntity> meals = mealService.getMealsByUserId(userId);
 
-            if (!meals.isEmpty()) {  // Instead of checking null, check if the list is empty
+            if (!meals.isEmpty()) {
                 return ResponseEntity.ok(new ResultMessage("Meals retrieved successfully", true, meals));
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
