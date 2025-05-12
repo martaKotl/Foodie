@@ -23,7 +23,7 @@ function Login() {
     UserService.loginUser(email, password)
       .then((response) => {
         if (response.data.success) {
-          localStorage.setItem('userId', response.data.userId);
+          localStorage.setItem('userId', response.data.data);
           console.log('Login successful:', response.data);
           navigate('/home');
         } else {

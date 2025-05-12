@@ -42,7 +42,7 @@ function AddMeal() {
     }
 
     const meal = {
-      name: mealname || 'unnamed',
+      name: mealname || 'Unnamed meal',
       weightGrams: gr,
       calories: ((gr * (parseFloat(macros.Calories) || 0)) / 100).toFixed(2),
       fat: ((gr * (parseFloat(macros.Fat) || 0)) / 100).toFixed(2),
@@ -55,8 +55,10 @@ function AddMeal() {
       }
     };
 
+    console.log("Meal to send:", meal);
     MealService.addMeal(meal)
       .then(response => {
+        
         console.log('Meal added successfully:', response);
         setSuccessMessage('Meal added successfully!');
         setErrorMessage('');
@@ -100,6 +102,7 @@ function AddMeal() {
         <label>How many grams did you consume? </label>
         <input
           type="number"
+          min="0"
           className="input-box"
           value={grams}
           onChange={e => setGrams(e.target.value)}
@@ -114,6 +117,7 @@ function AddMeal() {
             {label}:{' '}
             <input
               type="number"
+              min="0"
               className="input-box"
               value={macros[label]}
               onChange={e => handleMacroChange(label, e.target.value)}

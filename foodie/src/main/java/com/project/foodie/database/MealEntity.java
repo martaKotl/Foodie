@@ -20,11 +20,11 @@ public class MealEntity {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)  // FOREIGN KEY (user_id) REFERENCES users(id)
+    @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
     @Column(name = "recipe_id")
-    private Integer recipeId;  // Optional: Could be null if it's a custom meal
+    private Integer recipeId;
 
     @Column(nullable = false)
     private String name;
@@ -46,7 +46,7 @@ public class MealEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false)
-    private Date createdAt = new Date();  // Default value similar to now()
+    private Date createdAt = new Date();
 
     @Column(precision = 10, scale = 2)
     private BigDecimal fiber;

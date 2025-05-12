@@ -29,6 +29,7 @@ function Register() {
         return;
       }
 
+      setError("");
       const payload = {
         id: null,
         username: formData.username,
@@ -64,7 +65,8 @@ function Register() {
   };
 
   return (
-    <div className="register-container">
+    <div className="register-container min-h-screen flex items-center justify-center">
+      <div className="flex flex-col items-center">
       <div className="mx-36 my-8 text-4xl text-slate-700 font-medium">Register</div>
       <form onSubmit={handleSubmit}>
         <div className="mx-8 my-8 text-2xl text-gray-700 font-medium">
@@ -126,17 +128,25 @@ function Register() {
         {message && (
           <div className="text-green-600 text-lg font-semibold text-center mt-4 my-2">{message}</div>)}
 
-        <button type="button"
-          onClick={() => navigate("/")}
-          className="register-btn text-2xl rounded bg-red-600 text-white hover:bg-red-700 font-semibold px-5 py-2 mx-32 my-2">
-          Cancel
-        </button>
-        <button type="submit" 
-          className="register-btn text-2xl rounded bg-green-600 text-white hover:bg-green-700 font-semibold px-3 py-2 my-2">
-          Register
-        </button>
+        <div className="flex flex-col items-center space-y-4 mt-6">
+            <button
+              type="submit"
+              className="register-btn text-xl rounded bg-blue-600 text-white hover:bg-blue-700 font-semibold px-5 py-2"
+            >
+              Register
+            </button>
+
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+              className="register-btn text-base text-blue-600 underline hover:text-blue-800"
+            >
+              Already have an account? Login instead
+            </button>
+          </div>
         
       </form>
+    </div>
     </div>
   );
 }
