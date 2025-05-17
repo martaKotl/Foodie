@@ -4,9 +4,11 @@ import com.project.foodie.administration.EmailService;
 import com.project.foodie.administration.ResultMessage;
 import com.project.foodie.administration.UserService;
 import com.project.foodie.database.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,14 +29,22 @@ public class UserServiceImplementation implements UserService {
     private VerificationTokenRepository tokenRepository;
 
     @Autowired
+    private DailyGoalRepository goalRepository;
+
+    @Autowired
     private EmailService emailService;
 
 
-
+    @Transactional
     @Override
     public User createUser(final User user) {
         final UserEntity userEntity = userToUserEntity(user);
         final UserEntity savedUserEntity = userRepository.save(userEntity);
+
+        DailyGoalEntity goal = new DailyGoalEntity();
+        goal.setUser(savedUserEntity);
+        goalRepository.save(goal);
+
         return userEntityToUser(savedUserEntity);
     }
 
@@ -84,6 +94,9 @@ public class UserServiceImplementation implements UserService {
                     .expiryDate(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000)) // Token jest ważny 24h
                     .build();
             tokenRepository.save(verificationToken);
+
+
+
 
             emailService.sendVerificationEmail(user.getEmail(), token);
 

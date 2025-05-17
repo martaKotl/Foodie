@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './foodie.css';
 import MealService from '../services/MealService';
+import RecipeService from '../services/RecipeService';
 
 const macroLabels = ['Calories', 'Fat', 'Carbohydrate', 'Fiber', 'Protein', 'Salt'];
 
@@ -17,9 +18,61 @@ function AddMeal() {
     Salt: '',
   });
 
+  const [recipes, setRecipes] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    RecipeService.getAllRecipes()
+      .then(recipeList => {
+        setRecipes(recipeList);
+        const defaultRecipe = recipeList.find(r => r.id === 1);
+        if (defaultRecipe) {
+          setMealname(defaultRecipe.name);
+          setMacros({
+            Calories: defaultRecipe.caloriesPer100g?.toString() || '',
+            Fat: defaultRecipe.fatPer100g?.toString() || '',
+            Carbohydrate: defaultRecipe.carbsPer100g?.toString() || '',
+            Fiber: defaultRecipe.fiber?.toString() || '',
+            Protein: defaultRecipe.proteinPer100g?.toString() || '',
+            Salt: defaultRecipe.salt?.toString() || '',
+          });
+          setGrams(defaultRecipe.weightOfMeal?.toString() || '');
+        } else if (recipeList.length > 0) {
+          const first = recipeList[0];
+          setMealname(first.name);
+          setMacros({
+            Calories: first.caloriesPer100g?.toString() || '',
+            Fat: first.fatPer100g?.toString() || '',
+            Carbohydrate: first.carbsPer100g?.toString() || '',
+            Fiber: first.fiber?.toString() || '',
+            Protein: first.proteinPer100g?.toString() || '',
+            Salt: first.salt?.toString() || '',
+          });
+          setGrams(first.weightOfMeal?.toString() || '');
+        }
+        console.log('Loaded recipes:', recipeList);
+      })
+      .catch(error => {
+        console.error('Failed to load recipes:', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleMacroChange = (label, value) => {
     setMacros(prev => ({ ...prev, [label]: value }));
@@ -58,7 +111,6 @@ function AddMeal() {
     console.log("Meal to send:", meal);
     MealService.addMeal(meal)
       .then(response => {
-        
         console.log('Meal added successfully:', response);
         setSuccessMessage('Meal added successfully!');
         setErrorMessage('');
@@ -87,15 +139,60 @@ function AddMeal() {
         </div>
       </header>
 
-      <div style={{ margin: '10px' }}>
-        <label>Name of the meal: </label>
-        <input
-          type="text"
-          className="input-box"
-          value={mealname}
-          onChange={e => setMealname(e.target.value)}
-          style={{ width: '300px' }}
-        />
+      <div style={{ margin: '40px 20px 20px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <label style={{ marginBottom: '8px' }}>Name of the meal:</label>
+        <div style={{ position: 'relative', width: '300px' }} ref={dropdownRef}>
+          <input
+            type="text"
+            className="input-box"
+            value={mealname}
+            onChange={e => setMealname(e.target.value)}
+            onFocus={() => setShowDropdown(true)}
+            style={{ width: '100%' }}
+          />
+          {showDropdown && (
+            <div
+              style={{
+                position: 'absolute',
+                top: '100%',
+                left: 0,
+                right: 0,
+                backgroundColor: 'white',
+                border: '1px solid #ccc',
+                maxHeight: '150px',
+                overflowY: 'auto',
+                zIndex: 1000
+              }}
+            >
+              {recipes.map((recipe, index) => (
+                <div
+                  key={index}
+                  onClick={() => {
+                    setMealname(recipe.name);
+                    setMacros({
+                      Calories: recipe.caloriesPer100g?.toString() || '',
+                      Fat: recipe.fatPer100g?.toString() || '',
+                      Carbohydrate: recipe.carbsPer100g?.toString() || '',
+                      Fiber: recipe.fiber?.toString() || '',
+                      Protein: recipe.proteinPer100g?.toString() || '',
+                      Salt: recipe.salt?.toString() || '',
+                    });
+                    setGrams(recipe.weightOfMeal?.toString() || '');
+                    setShowDropdown(false);
+                  }}
+                  style={{
+                    padding: '8px',
+                    cursor: 'pointer',
+                    borderBottom: '1px solid #eee',
+                    fontSize: '12px',  // smaller font size
+                  }}
+                >
+                  {recipe.name}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       <div style={{ margin: '10px' }}>
