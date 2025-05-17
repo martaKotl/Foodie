@@ -23,17 +23,17 @@ public class DailyGoalEntity {
     private UserEntity user;
 
     @Column(precision = 6, scale = 2)
-    private BigDecimal calories;
+    private BigDecimal calories = new BigDecimal("2000.00");
 
     @Column(precision = 5, scale = 2)
-    private BigDecimal protein;
+    private BigDecimal protein = new BigDecimal("50.00");
 
     @Column(precision = 5, scale = 2)
-    private BigDecimal carbs;
+    private BigDecimal carbs = new BigDecimal("250.00");
 
     @Column(precision = 5, scale = 2)
-    private BigDecimal fat;
+    private BigDecimal fat = new BigDecimal("50.00");
 
     @Column(name = "water_ml")
-    private Integer water;
+    private Integer water = 2000;
 }
