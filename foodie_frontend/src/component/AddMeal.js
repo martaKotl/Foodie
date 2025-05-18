@@ -3,10 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import './foodie.css';
 import MealService from '../services/MealService';
 import RecipeService from '../services/RecipeService';
+import { useLocation } from 'react-router-dom';
 
 const macroLabels = ['Calories', 'Fat', 'Carbohydrate', 'Fiber', 'Protein', 'Salt'];
 
-function AddMeal() {
+function AddMeal() {    
+  const location = useLocation();
+  const editingMeal = location.state?.meal || null; 
+
   const [mealname, setMealname] = useState('');
   const [grams, setGrams] = useState('');
   const [macros, setMacros] = useState({
@@ -62,6 +66,24 @@ function AddMeal() {
   }, []);
 
   useEffect(() => {
+  if (editingMeal) {
+    setMealname(editingMeal.name);
+    setGrams(editingMeal.weightGrams.toString());
+
+    const weight = editingMeal.weightGrams || 1;
+
+    setMacros({
+      Calories: ((editingMeal.calories / weight) * 100).toFixed(2),
+      Fat: ((editingMeal.fat / weight) * 100).toFixed(2),
+      Carbohydrate: ((editingMeal.carbs / weight) * 100).toFixed(2),
+      Fiber: ((editingMeal.fiber / weight) * 100).toFixed(2),
+      Protein: ((editingMeal.protein / weight) * 100).toFixed(2),
+      Salt: ((editingMeal.salt / weight) * 100).toFixed(2),
+    });
+  }
+}, [editingMeal]);
+
+  useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowDropdown(false);
@@ -103,27 +125,42 @@ function AddMeal() {
       fiber: ((gr * (parseFloat(macros.Fiber) || 0)) / 100).toFixed(2),
       protein: ((gr * (parseFloat(macros.Protein) || 0)) / 100).toFixed(2),
       salt: ((gr * (parseFloat(macros.Salt) || 0)) / 100).toFixed(2),
-      user: {
-        id: parseInt(userId)
-      }
+      userId: parseInt(userId)
     };
 
     console.log("Meal to send:", meal);
-    MealService.addMeal(meal)
-      .then(response => {
-        console.log('Meal added successfully:', response);
-        setSuccessMessage('Meal added successfully!');
-        setErrorMessage('');
 
-        setTimeout(() => {
-          navigate('/home');
-        }, 2000);
-      })
-      .catch(error => {
-        console.error('Error adding meal:', error);
-        setErrorMessage('Error adding meal. Please try again.');
-        setSuccessMessage('');
-      });
+    if (editingMeal) {
+      MealService.updateMeal(editingMeal.id, meal)
+        .then(response => {
+          console.log('Meal updated successfully:', response);
+          setSuccessMessage('Meal updated successfully!');
+          setErrorMessage('');
+          setTimeout(() => navigate('/home'), 1500);
+        })
+        .catch(error => {
+          console.error('Error updating meal:', error);
+          setErrorMessage('Error updating meal. Please try again.');
+          setSuccessMessage('');
+        });
+      return;
+    }
+
+    if (!editingMeal) {
+      MealService.addMeal(meal)
+        .then(response => {
+          console.log('Meal added successfully:', response);
+          setSuccessMessage('Meal added successfully!');
+          setErrorMessage('');
+
+          setTimeout(() => {navigate('/home');}, 1500);
+        })
+        .catch(error => {
+          console.error('Error adding meal:', error);
+          setErrorMessage('Error adding meal. Please try again.');
+          setSuccessMessage('');
+        });
+    }
   };
 
   const cancelForm = () => {

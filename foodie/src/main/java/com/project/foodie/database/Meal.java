@@ -2,6 +2,7 @@ package com.project.foodie.database;
 
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -11,14 +12,13 @@ import java.util.Date;
 public class Meal {
     private Integer id;
     private Integer userId;
-    private Integer recipeId;
     private String name;
-    private Double calories;
-    private Double protein;
-    private Double carbs;
-    private Double fat;
-    private Double weightGrams;
+    private BigDecimal calories;
+    private BigDecimal protein;
+    private BigDecimal carbs;
+    private BigDecimal fat;
+    private BigDecimal weightGrams;
     private Date createdAt;
-    private Double fiber;
-    private Double salt;
+    private BigDecimal fiber;
+    private BigDecimal salt;
 }

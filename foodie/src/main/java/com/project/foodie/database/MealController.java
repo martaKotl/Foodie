@@ -22,18 +22,14 @@ public class MealController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ResultMessage> addMeal(@RequestBody MealEntity mealEntity) {
+    public ResponseEntity<ResultMessage> addMeal(@RequestBody Meal meal) {
 
         try {
-            MealEntity addedMeal = mealService.addMeal(mealEntity);
-            if (addedMeal != null) {
-                return ResponseEntity.status(HttpStatus.CREATED).body(
-                        new ResultMessage("Meal added successfully", true)
-                );
+            ResultMessage result = mealService.addMeal(meal);
+            if (result.getSuccess()) {
+                return ResponseEntity.ok(result);
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                        new ResultMessage("Failed to add meal", false)
-                );
+                return ResponseEntity.badRequest().body(result);
             }
         } catch (Exception e) {
 
@@ -62,8 +58,6 @@ public class MealController {
         }
     }
 
-
-
     @DeleteMapping("/delete/{userId}")
     public ResponseEntity<ResultMessage> deleteMealsByUserId(@PathVariable Integer userId) {
         ResultMessage result = mealService.deleteMealsByUserId(userId);
@@ -71,6 +65,22 @@ public class MealController {
             return ResponseEntity.ok(result);
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
+    }
+
+    @PutMapping("/edit/{mealId}")
+    public ResponseEntity<ResultMessage> editMeal(@PathVariable Integer id, @RequestBody Meal editedMeal){
+        try {
+            ResultMessage result  = mealService.editMeal(id, editedMeal);
+            if (result.getSuccess()) {
+                return ResponseEntity.ok(result);
+            } else {
+                return ResponseEntity.badRequest().body(result);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new ResultMessage("Error updating meal", false, null)
+            );
         }
     }
 }

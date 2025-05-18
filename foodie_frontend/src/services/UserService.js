@@ -12,7 +12,7 @@ class UserService {
     }
 
     loginUser(email, password) {
-        console.log(email, password)
+        //console.log(email, password)
         return axios.post(`${Foodie_base_URL}/login`, { email, password });
     }
 }
