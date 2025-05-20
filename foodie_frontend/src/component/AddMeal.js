@@ -276,7 +276,11 @@ function AddMeal() {
               type="number"
               min="0"
               className="input-box"
-              value={macros[label]}
+              value={
+                isEditing && grams
+                  ? ((parseFloat(per100gRef.current[label]) || 0) * parseFloat(grams) / 100).toFixed(2)
+                  : macros[label]
+              }
               onChange={e => handleMacroChange(label, e.target.value)}
             />
             <span style={{ display: 'inline-block', margin: 0 }}>g</span>
