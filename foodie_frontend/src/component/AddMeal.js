@@ -3,10 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import './foodie.css';
 import MealService from '../services/MealService';
 import RecipeService from '../services/RecipeService';
+import { useLocation } from 'react-router-dom';
 
 const macroLabels = ['Calories', 'Fat', 'Carbohydrate', 'Fiber', 'Protein', 'Salt'];
 
-function AddMeal() {
+function AddMeal() {    
+  const location = useLocation();
+  const editingMeal = location.state?.meal || null; 
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [mealId, setMealId] = useState('');
   const [mealname, setMealname] = useState('');
   const [grams, setGrams] = useState('');
   const [macros, setMacros] = useState({
@@ -25,12 +31,23 @@ function AddMeal() {
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
+  const per100gRef = useRef({});
+
+  const totalMacros = () => {
+  const weight = parseFloat(grams) || 0;
+  const totals = {};
+  for (const key of macroLabels) {
+    totals[key] = ((weight * (parseFloat(macros[key]) || 0)) / 100).toFixed(2);
+  }
+    return totals;
+  };
+
   useEffect(() => {
     RecipeService.getAllRecipes()
       .then(recipeList => {
         setRecipes(recipeList);
         const defaultRecipe = recipeList.find(r => r.id === 1);
-        if (defaultRecipe) {
+        if (defaultRecipe && !editingMeal) {
           setMealname(defaultRecipe.name);
           setMacros({
             Calories: defaultRecipe.caloriesPer100g?.toString() || '',
@@ -41,7 +58,7 @@ function AddMeal() {
             Salt: defaultRecipe.salt?.toString() || '',
           });
           setGrams(defaultRecipe.weightOfMeal?.toString() || '');
-        } else if (recipeList.length > 0) {
+        } else if (recipeList.length > 0 && !editingMeal) {
           const first = recipeList[0];
           setMealname(first.name);
           setMacros({
@@ -60,6 +77,30 @@ function AddMeal() {
         console.error('Failed to load recipes:', error);
       });
   }, []);
+
+  useEffect(() => {
+    if (editingMeal) {
+      setIsEditing(true);
+      setMealname(editingMeal.name);
+      setGrams(editingMeal.weightGrams?.toString() || '');
+      setMealId(editingMeal.id);
+
+      const weight = parseFloat(editingMeal.weightGrams || 0);
+
+      const toPer100g = (val) => weight ? ((parseFloat(val) || 0) * 100 / weight).toFixed(2) : '0';
+
+      const per100g = {
+        Calories: toPer100g(editingMeal.calories),
+        Fat: toPer100g(editingMeal.fat),
+        Carbohydrate: toPer100g(editingMeal.carbs),
+        Fiber: toPer100g(editingMeal.fiber),
+        Protein: toPer100g(editingMeal.protein),
+        Salt: toPer100g(editingMeal.salt),
+      };
+      per100gRef.current = per100g;
+      setMacros(per100g);
+    }
+  }, [editingMeal]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -94,36 +135,55 @@ function AddMeal() {
       return;
     }
 
+    const totals = totalMacros();
+
     const meal = {
+      id: mealId || null,
       name: mealname || 'Unnamed meal',
       weightGrams: gr,
-      calories: ((gr * (parseFloat(macros.Calories) || 0)) / 100).toFixed(2),
-      fat: ((gr * (parseFloat(macros.Fat) || 0)) / 100).toFixed(2),
-      carbs: ((gr * (parseFloat(macros.Carbohydrate) || 0)) / 100).toFixed(2),
-      fiber: ((gr * (parseFloat(macros.Fiber) || 0)) / 100).toFixed(2),
-      protein: ((gr * (parseFloat(macros.Protein) || 0)) / 100).toFixed(2),
-      salt: ((gr * (parseFloat(macros.Salt) || 0)) / 100).toFixed(2),
-      user: {
-        id: parseInt(userId)
-      }
+      calories: totals.Calories,
+      fat: totals.Fat,
+      carbs: totals.Carbohydrate,
+      fiber: totals.Fiber,
+      protein: totals.Protein,
+      salt: totals.Salt,
+      userId: parseInt(userId)
     };
 
     console.log("Meal to send:", meal);
-    MealService.addMeal(meal)
-      .then(response => {
-        console.log('Meal added successfully:', response);
-        setSuccessMessage('Meal added successfully!');
-        setErrorMessage('');
 
-        setTimeout(() => {
-          navigate('/home');
-        }, 2000);
-      })
-      .catch(error => {
-        console.error('Error adding meal:', error);
-        setErrorMessage('Error adding meal. Please try again.');
-        setSuccessMessage('');
-      });
+    if (editingMeal) {
+      console.log('Editing meal ID:', editingMeal?.id);
+      MealService.editMeal(editingMeal.id, meal)
+        .then(response => {
+          console.log('Meal edited successfully:', response);
+          setSuccessMessage('Meal updated successfully!');
+          setErrorMessage('');
+          setTimeout(() => navigate('/home'), 1500);
+        })
+        .catch(error => {
+          console.error('Error updating meal:', error);
+          setErrorMessage('Error updating meal. Please try again.');
+          setSuccessMessage('');
+        });
+      return;
+    }
+
+    if (!editingMeal) {
+      MealService.addMeal(meal)
+        .then(response => {
+          console.log('Meal added successfully:', response);
+          setSuccessMessage('Meal added successfully!');
+          setErrorMessage('');
+
+          setTimeout(() => {navigate('/home');}, 1500);
+        })
+        .catch(error => {
+          console.error('Error adding meal:', error);
+          setErrorMessage('Error adding meal. Please try again.');
+          setSuccessMessage('');
+        });
+    }
   };
 
   const cancelForm = () => {
@@ -216,7 +276,11 @@ function AddMeal() {
               type="number"
               min="0"
               className="input-box"
-              value={macros[label]}
+              value={
+                isEditing && grams
+                  ? ((parseFloat(per100gRef.current[label]) || 0) * parseFloat(grams) / 100).toFixed(2)
+                  : macros[label]
+              }
               onChange={e => handleMacroChange(label, e.target.value)}
             />
             <span style={{ display: 'inline-block', margin: 0 }}>g</span>

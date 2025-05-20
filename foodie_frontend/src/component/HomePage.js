@@ -425,6 +425,14 @@ function HomePage() {
           <td>{meal.protein}</td>
           <td>{meal.salt}</td>
           <td>{new Date(Number(meal.createdAt)).toLocaleString()}</td>
+          <td>
+            <button
+              onClick={() => navigate('/home/add_a_meal', { state: { meal } })}
+              style={{ padding: '5px 10px', backgroundColor: '#007bff', color: 'white', borderRadius: '5px' }}
+            >
+              Edit
+            </button>
+        </td>
         </tr>
       ))}
     </tbody>

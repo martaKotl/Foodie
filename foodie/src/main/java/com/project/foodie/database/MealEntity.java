@@ -19,12 +19,8 @@ public class MealEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity user;
-
-    @Column(name = "recipe_id")
-    private Integer recipeId;
+    @Column(name = "user_id", nullable = false)
+    private Integer userId;
 
     @Column(nullable = false)
     private String name;
