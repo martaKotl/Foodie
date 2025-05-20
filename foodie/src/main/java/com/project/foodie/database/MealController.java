@@ -69,9 +69,9 @@ public class MealController {
     }
 
     @PutMapping("/edit/{mealId}")
-    public ResponseEntity<ResultMessage> editMeal(@PathVariable Integer id, @RequestBody Meal editedMeal){
+    public ResponseEntity<ResultMessage> editMeal(@PathVariable Integer mealId, @RequestBody Meal editedMeal){
         try {
-            ResultMessage result  = mealService.editMeal(id, editedMeal);
+            ResultMessage result  = mealService.editMeal(mealId, editedMeal);
             if (result.getSuccess()) {
                 return ResponseEntity.ok(result);
             } else {

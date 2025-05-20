@@ -44,15 +44,9 @@ class MealService {
     }
 
     editMeal(id, meal) {
-        return axios.put(`${Foodie_base_URL}/meals/edit/${id}`, meal)
-            .then(response => {
-            if (response.data.success) return response.data;
-            else throw new Error(response.data.message || "Failed to edit meal.");
-            })
-            .catch(error => {
-            console.error("There was an error editing the meal:", error);
-            throw error;
-            });
+        console.log("Meal to send (as numbers):", meal);
+        return axios.put(`${Foodie_base_URL}/meals/edit/${id}`, meal);
+            
     }
 }
 

@@ -50,10 +50,23 @@ public class MealServiceImplementation implements MealService {
     @Transactional
     @Override
     public ResultMessage editMeal(Integer id, Meal editedMeal) {
+        Optional<MealEntity> existing = mealRepository.findById(id);
+        if (existing.isEmpty()) {
+            return new ResultMessage("Meal not found", false);
+        }
         try {
-            editedMeal.setId(id);
-            MealEntity entityToSave = mealToMealEntity(editedMeal);
-            mealRepository.save(entityToSave);
+            MealEntity entity = existing.get();
+            entity.setName(editedMeal.getName());
+            entity.setWeightGrams(editedMeal.getWeightGrams());
+            entity.setCalories(editedMeal.getCalories());
+            entity.setFat(editedMeal.getFat());
+            entity.setCarbs(editedMeal.getCarbs());
+            entity.setFiber(editedMeal.getFiber());
+            entity.setProtein(editedMeal.getProtein());
+            entity.setSalt(editedMeal.getSalt());
+            entity.setUserId(editedMeal.getUserId());
+
+            mealRepository.save(entity);
             return new ResultMessage("Meal updated successfully", true);
         } catch (Exception e) {
             return new ResultMessage("Error updating meal", false);
