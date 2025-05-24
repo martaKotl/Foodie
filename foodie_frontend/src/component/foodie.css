@@ -17,9 +17,6 @@ body {
 }
 
 #logout {
-  position: absolute;
-  top: 20px;
-  right: 20px;
   background-color: #8b0000;
   border: 1px solid #333;
   border-radius: 15px;
@@ -34,6 +31,12 @@ body {
     
 #logout:hover {
   background-color: #a80000;
+}
+
+#menu {
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }
 
 
