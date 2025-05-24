@@ -1,3 +1,4 @@
+// HomePage.js
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, DoughnutController } from 'chart.js';
@@ -39,11 +40,8 @@ function HomePage() {
   const fetchUserGoals = async (userId) => {
     try {
       const response = await DailyGoalsService.getGoals(userId);
-      if (response && response.data && response.data.data) {
-        console.log('Fetched user goals:', response.data.data);
+      if (response?.data?.data) {
         setGoals(response.data.data);
-      } else {
-        console.warn('No daily goal data found for user.');
       }
     } catch (error) {
       console.error('Error fetching daily goals:', error);
@@ -52,13 +50,9 @@ function HomePage() {
 
   const createDonutChart = (id, consumed, goal, color, label) => {
     const canvas = document.getElementById(id);
-    if (!canvas) {
-      console.error(`Canvas with id "${id}" not found`);
-      return;
-    }
+    if (!canvas) return;
 
     const remaining = Math.max(goal - consumed, 0);
-    console.log(`Creating chart for ${label}: consumed=${consumed}, goal=${goal}, remaining=${remaining}`);
 
     if (chartRefs.current[id]) {
       chartRefs.current[id].data.datasets[0].data = [consumed, remaining];
@@ -76,13 +70,8 @@ function HomePage() {
         },
         options: {
           plugins: {
-            title: {
-              display: true,
-              text: label
-            },
-            legend: {
-              display: false
-            }
+            title: { display: true, text: label },
+            legend: { display: false }
           },
           cutout: '70%',
         }
@@ -95,67 +84,32 @@ function HomePage() {
     if (userId) {
       fetchUserGoals(userId);
       MealService.getMealsByUserId(userId)
-        .then(response => {
-          if (response && Array.isArray(response.data)) {
-            setMeals(response.data);
-          } else {
-            console.error('Fetched meals data is not an array:', response.data);
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching meals:', error);
-        });
-    } else {
-      console.error('User not logged in.');
+        .then(response => setMeals(Array.isArray(response.data) ? response.data : []))
+        .catch(console.error);
     }
   }, []);
 
   useEffect(() => {
     if (!goals || Object.keys(goals).length === 0) return;
 
-    const caloriesGoal = Number(goals.calories) || 2000;
-    const proteinGoal = Number(goals.protein) || 100;
-    const fatGoal = Number(goals.fat) || 70;
-    const carbsGoal = Number(goals.carbs) || 250;
-
     const consumed = recalculateConsumedData(meals || []);
-
-    createDonutChart('idcals', consumed.calories, caloriesGoal, '#ff6384', 'Calories');
-    createDonutChart('carbs', consumed.carbs, carbsGoal, '#4bc0c0', 'Carbs');
-    createDonutChart('fats', consumed.fat, fatGoal, '#ffcd56', 'Fat');
-    createDonutChart('proteins', consumed.protein, proteinGoal, '#36a2eb', 'Protein');
+    createDonutChart('idcals', consumed.calories, goals.calories || 2000, '#ff6384', 'Calories');
+    createDonutChart('carbs', consumed.carbs, goals.carbs || 250, '#4bc0c0', 'Carbs');
+    createDonutChart('fats', consumed.fat, goals.fat || 70, '#ffcd56', 'Fat');
+    createDonutChart('proteins', consumed.protein, goals.protein || 100, '#36a2eb', 'Protein');
   }, [meals, goals]);
-
-  // Open modal and prefill inputs with current goals
-  const openGoalsForm = () => {
-    setEditableGoals({
-      calories: goals.calories || '',
-      protein: goals.protein || '',
-      carbs: goals.carbs || '',
-      fat: goals.fat || '',
-      water: goals.water || '',
-    });
-    setShowGoalsForm(true);
-  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setEditableGoals(prev => ({
-      ...prev,
-      [name]: value,
-    }));
+    setEditableGoals(prev => ({ ...prev, [name]: value }));
   };
 
   const handleGoalsSubmit = async (e) => {
     e.preventDefault();
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
 
     try {
-      const userId = localStorage.getItem('userId');
-      if (!userId) {
-        alert('User not logged in');
-        return;
-      }
-
       const updatedGoals = {
         calories: Number(editableGoals.calories),
         protein: Number(editableGoals.protein),
@@ -163,244 +117,75 @@ function HomePage() {
         fat: Number(editableGoals.fat),
         water: Number(editableGoals.water),
       };
-
       await DailyGoalsService.updateGoals(userId, updatedGoals);
       setGoals(updatedGoals);
       setShowGoalsForm(false);
     } catch (error) {
-      console.error('Error updating daily goals:', error);
-      alert('Failed to update goals. Please try again.');
+      alert('Failed to update goals');
     }
-  };
-
-  const handleGoalsCancel = () => {
-    setShowGoalsForm(false);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('userId');
-    navigate('/');
   };
 
   const handleClearMeals = () => {
     const userId = localStorage.getItem('userId');
-    if (userId) {
-      MealService.deleteMealsByUserId(userId)
-        .then(response => {
-          console.log('Meals cleared successfully:', response);
-          setMeals([]);
-        })
-        .catch(error => {
-          console.error('Error clearing meals:', error);
-        });
-    } else {
-      console.error('User not logged in.');
-    }
+    if (!userId) return;
+    MealService.deleteMealsByUserId(userId)
+      .then(() => setMeals([]))
+      .catch(console.error);
   };
 
   return (
     <div>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <header id='Hheader'>
         <div>
           <h1>FOODIE</h1>
-          <img src="/foodie_logo.png" alt="Foodie Logo" id="logo" />
         </div>
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <button
-            id="menu"
-            onClick={() => setShowSidebar(true)}
-          >
-            Menu
-          </button>
+        <div id="header-buttons">
+          <button id="menu" onClick={() => setShowSidebar(true)}>☰</button>
         </div>
       </header>
-
 
       <div id="diagrams">
         <div className="cals">
           <canvas id="idcals"></canvas>
         </div>
         <div className="macrocharts">
-          <div className="macro">
-            <canvas id="carbs"></canvas>
-          </div>
-          <div className="macro">
-            <canvas id="fats"></canvas> 
-          </div>
-          <div className="macro">
-            <canvas id="proteins"></canvas> 
-          </div>
+          <div className="macro"><canvas id="carbs"></canvas></div>
+          <div className="macro"><canvas id="fats"></canvas></div>
+          <div className="macro"><canvas id="proteins"></canvas></div>
         </div>
       </div>
 
-      <button
-        onClick={openGoalsForm}
-        style={{
-          backgroundColor: '#ebebeb',
-          border: '1px solid #333',
-          borderRadius: '15px',
-          padding: '15px 40px',
-          fontSize: '18px',
-          cursor: 'pointer',
-          textTransform: 'uppercase',
-          fontWeight: 'bold',
-          width: 'auto',
-          marginRight: '20px'
-        }}
-      >
-        Change daily goals
-      </button>
+      <div id="action-buttons">
+        <button id="HchangeGoals" onClick={() => {
+          setEditableGoals(goals);
+          setShowGoalsForm(true);
+        }}>Change daily goals</button>
 
-      <button 
-        onClick={() => navigate('/home/add_a_meal')} 
-        className="add-meal-button"
-        style={{
-          backgroundColor: '#ebebeb',
-          border: '1px solid #333',
-          borderRadius: '15px',
-          padding: '15px 40px',
-          fontSize: '18px',
-          cursor: 'pointer',
-          textTransform: 'uppercase',
-          fontWeight: 'bold',
-          width: 'auto'
-        }}
-      >
-        Add a Meal
-      </button>
+        <button id="HaddMeal" onClick={() => navigate('/home/add_a_meal')}>Add a Meal</button>
+        <button id="HclearMeals" onClick={handleClearMeals}>Clear Meals</button>
+      </div>
 
-      <button
-        onClick={handleClearMeals}
-        className="clear-meals-button"
-        style={{
-          backgroundColor: '#f44336', 
-          color: 'white',
-          border: 'none',
-          borderRadius: '15px',
-          padding: '15px 40px',
-          fontSize: '18px',
-          cursor: 'pointer',
-          textTransform: 'uppercase',
-          fontWeight: 'bold',
-          width: 'auto',
-          marginLeft: '20px'
-        }}
-      >
-        Clear Meals
-      </button>
-
-      {/* Modal for changing daily goals */}
       {showGoalsForm && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0, left: 0, right: 0, bottom: 0,
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9999,
-          }}
-        >
-          <form
-            onSubmit={handleGoalsSubmit}
-            style={{
-              backgroundColor: 'white',
-              padding: '30px',
-              borderRadius: '10px',
-              boxShadow: '0 2px 10px rgba(0,0,0,0.3)',
-              minWidth: '300px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '15px',
-            }}
-          >
-            <h2>Update Daily Goals</h2>
-            <label>
-              Calories:
-              <input
-                type="number"
-                name="calories"
-                value={editableGoals.calories}
-                onChange={handleInputChange}
-                required
-                min="0"
-              />
-            </label>
-            <label>
-              Protein (g):
-              <input
-                type="number"
-                name="protein"
-                value={editableGoals.protein}
-                onChange={handleInputChange}
-                required
-                min="0"
-              />
-            </label>
-            <label>
-              Carbs (g):
-              <input
-                type="number"
-                name="carbs"
-                value={editableGoals.carbs}
-                onChange={handleInputChange}
-                required
-                min="0"
-              />
-            </label>
-            <label>
-              Fat (g):
-              <input
-                type="number"
-                name="fat"
-                value={editableGoals.fat}
-                onChange={handleInputChange}
-                required
-                min="0"
-              />
-            </label>
-            <label>
-              Water (ml):
-              <input
-                type="number"
-                name="water"
-                value={editableGoals.water}
-                onChange={handleInputChange}
-                required
-                min="0"
-              />
-            </label>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
-              <button
-                type="submit"
-                style={{
-                  backgroundColor: '#4CAF50',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  padding: '10px 20px',
-                  cursor: 'pointer',
-                  fontWeight: 'bold',
-                }}
-              >
-                Submit
-              </button>
-              <button
-                type="button"
-                onClick={handleGoalsCancel}
-                style={{
-                  backgroundColor: '#f44336',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  padding: '10px 20px',
-                  cursor: 'pointer',
-                  fontWeight: 'bold',
-                }}
-              >
-                Cancel
-              </button>
+        <div id="overlay">
+          <form id="goals-form" onSubmit={handleGoalsSubmit}>
+            <h2 id='HupdateGoals'>Update Daily Goals</h2>
+            {['calories', 'protein', 'carbs', 'fat', 'water'].map(nutrient => (
+              <label key={nutrient} className='HnutrientLabel'>
+                {nutrient.charAt(0).toUpperCase() + nutrient.slice(1)}:
+                <input
+                  type="number"
+                  name={nutrient}
+                  className='HnutrientInput'
+                  value={editableGoals[nutrient]}
+                  onChange={handleInputChange}
+                  required
+                  min="0"
+                />
+              </label>
+            ))}
+            <div className="form-buttons">
+              <button type="submit" id="HsubGoals">Submit</button>
+              <button type="button" id="HcancelGoals" onClick={() => setShowGoalsForm(false)}>Cancel</button>
             </div>
           </form>
         </div>
@@ -408,108 +193,50 @@ function HomePage() {
 
       <div id="meal_table">
         {meals.length > 0 ? (
-  <table border="1" id="meals">
-    <thead>
-      <tr>
-        <th>Meal</th>
-        <th>Grams</th>
-        <th>Calories</th>
-        <th>Fat</th>
-        <th>Carbs</th>
-        <th>Fiber</th>
-        <th>Protein</th>
-        <th>Salt</th>
-        <th>Time added</th>
-      </tr>
-    </thead>
-    <tbody>
-      {meals.map((meal, index) => (
-        <tr key={meal._id || index}>
-          <td>{meal.name}</td>
-          <td>{meal.weightGrams}</td>
-          <td>{meal.calories}</td>
-          <td>{meal.fat}</td>
-          <td>{meal.carbs}</td>
-          <td>{meal.fiber}</td>
-          <td>{meal.protein}</td>
-          <td>{meal.salt}</td>
-          <td>{new Date(Number(meal.createdAt)).toLocaleString()}</td>
-          <td>
-            <button
-              onClick={() => navigate('/home/add_a_meal', { state: { meal } })}
-              style={{ padding: '5px 10px', backgroundColor: '#007bff', color: 'white', borderRadius: '5px' }}
-            >
-              Edit
-            </button>
-        </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-) : (
-  <p style={{ marginTop: '20px', marginBottom: '20px' }}>Add a meal to see it here!</p>
-)}
-
+          <table border="1" id="meals">
+            <thead>
+              <tr>
+                <th>Meal</th><th>Grams</th><th>Calories</th><th>Fat</th>
+                <th>Carbs</th><th>Fiber</th><th>Protein</th><th>Salt</th><th>Time added</th><th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {meals.map((meal, index) => (
+                <tr key={meal._id || index}>
+                  <td>{meal.name}</td>
+                  <td>{meal.weightGrams}</td>
+                  <td>{meal.calories}</td>
+                  <td>{meal.fat}</td>
+                  <td>{meal.carbs}</td>
+                  <td>{meal.fiber}</td>
+                  <td>{meal.protein}</td>
+                  <td>{meal.salt}</td>
+                  <td>{new Date(Number(meal.createdAt)).toLocaleString()}</td>
+                  <td>
+                    <button className="edit-button" onClick={() => navigate('/home/add_a_meal', { state: { meal } })}>Edit</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : <p className="empty-msg">Add a meal to see it here!</p>}
       </div>
+
       {showSidebar && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            right: 0,
-            height: '100%',
-            width: '250px',
-            backgroundColor: '#fff',
-            boxShadow: '-2px 0 5px rgba(0,0,0,0.3)',
-            zIndex: 9999,
-            padding: '20px',
-            display: 'flex',
-            flexDirection: 'column',
-            animation: 'slideIn 0.3s forwards',
-          }}
-        >
-          <button
-            onClick={() => setShowSidebar(false)}
-            style={{
-              alignSelf: 'flex-end',
-              background: 'none',
-              border: 'none',
-              fontSize: '18px',
-              cursor: 'pointer',
-            }}
-          >
-            ✖
-          </button>
-
-          <button id="profile" style={{ margin: '10px 0' }}>
-            My Profile
-          </button>
-
-          <button id="recipes" style={{ margin: '10px 0' }}>
-            Browse Recipes
-          </button>
-
-          <button id="bmi_calc" style={{ margin: '10px 0' }}>
-            BMI calculator
-          </button>
-
-          <button id="goal_weight" style={{ margin: '10px 0' }}>
-            Calculate daily calorie surplus/deficit
-          </button>
-          
-          <button id="daily_goals" onClick={openGoalsForm} style={{ margin: '10px 0' }}>
-            Change  daily goals
-          </button>
-
-          <button id="logout" onClick={handleLogout} style={{ margin: '10px 0' }}>
-            Logout
-          </button>
-          
+        <div id="Hsidebar">
+          <button className="close-sidebar" onClick={() => setShowSidebar(false)}>✖</button>
+          <button className='sidebarOption' id="profile">My Profile</button>
+          <button className='sidebarOption' id="recipes">Browse Recipes</button>
+          <button className='sidebarOption' id="bmi_calc">BMI calculator</button>
+          <button className='sidebarOption' id="goal_weight">Calculate daily calorie surplus/deficit</button>
+          <button className='sidebarOption' id="daily_goals" onClick={() => setShowGoalsForm(true)}>Change daily goals</button>
+          <button className='sidebarOption' id="Hlogout" onClick={() => {
+            localStorage.removeItem('userId');
+            navigate('/');
+          }}>Logout</button>
         </div>
       )}
-
     </div>
-    
   );
 }
 

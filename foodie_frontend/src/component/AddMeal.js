@@ -7,9 +7,9 @@ import { useLocation } from 'react-router-dom';
 
 const macroLabels = ['Calories', 'Fat', 'Carbohydrate', 'Fiber', 'Protein', 'Salt'];
 
-function AddMeal() {    
+function AddMeal() {
   const location = useLocation();
-  const editingMeal = location.state?.meal || null; 
+  const editingMeal = location.state?.meal || null;
 
   const [isEditing, setIsEditing] = useState(false);
   const [mealId, setMealId] = useState('');
@@ -34,11 +34,11 @@ function AddMeal() {
   const per100gRef = useRef({});
 
   const totalMacros = () => {
-  const weight = parseFloat(grams) || 0;
-  const totals = {};
-  for (const key of macroLabels) {
-    totals[key] = ((weight * (parseFloat(macros[key]) || 0)) / 100).toFixed(2);
-  }
+    const weight = parseFloat(grams) || 0;
+    const totals = {};
+    for (const key of macroLabels) {
+      totals[key] = ((weight * (parseFloat(macros[key]) || 0)) / 100).toFixed(2);
+    }
     return totals;
   };
 
@@ -71,7 +71,6 @@ function AddMeal() {
           });
           setGrams(first.weightOfMeal?.toString() || '');
         }
-        console.log('Loaded recipes:', recipeList);
       })
       .catch(error => {
         console.error('Failed to load recipes:', error);
@@ -150,19 +149,14 @@ function AddMeal() {
       userId: parseInt(userId)
     };
 
-    console.log("Meal to send:", meal);
-
     if (editingMeal) {
-      console.log('Editing meal ID:', editingMeal?.id);
       MealService.editMeal(editingMeal.id, meal)
         .then(response => {
-          console.log('Meal edited successfully:', response);
           setSuccessMessage('Meal updated successfully!');
           setErrorMessage('');
           setTimeout(() => navigate('/home'), 1500);
         })
         .catch(error => {
-          console.error('Error updating meal:', error);
           setErrorMessage('Error updating meal. Please try again.');
           setSuccessMessage('');
         });
@@ -172,14 +166,11 @@ function AddMeal() {
     if (!editingMeal) {
       MealService.addMeal(meal)
         .then(response => {
-          console.log('Meal added successfully:', response);
           setSuccessMessage('Meal added successfully!');
           setErrorMessage('');
-
-          setTimeout(() => {navigate('/home');}, 1500);
+          setTimeout(() => { navigate('/home'); }, 1500);
         })
         .catch(error => {
-          console.error('Error adding meal:', error);
           setErrorMessage('Error adding meal. Please try again.');
           setSuccessMessage('');
         });
@@ -192,41 +183,27 @@ function AddMeal() {
 
   return (
     <div>
-      <header>
+      <header id="Aheader">
         <h1>Add a meal</h1>
-        <div id="fot" style={{ margin: '20px' }}>
-          <img src="/foodie_logo.png" alt="Meal icon" />
-        </div>
       </header>
 
-      <div style={{ margin: '40px 20px 20px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <label style={{ marginBottom: '8px' }}>Name of the meal:</label>
-        <div style={{ position: 'relative', width: '300px' }} ref={dropdownRef}>
+      <div id="Abox">
+        <label htmlFor="mealname-input" id="AmealLabel">Name of the meal:</label>
+        <div id="dropdown-wrapper" ref={dropdownRef}>
           <input
             type="text"
+            id="mealname-input"
             className="input-box"
             value={mealname}
             onChange={e => setMealname(e.target.value)}
             onFocus={() => setShowDropdown(true)}
-            style={{ width: '100%' }}
           />
           {showDropdown && (
-            <div
-              style={{
-                position: 'absolute',
-                top: '100%',
-                left: 0,
-                right: 0,
-                backgroundColor: 'white',
-                border: '1px solid #ccc',
-                maxHeight: '150px',
-                overflowY: 'auto',
-                zIndex: 1000
-              }}
-            >
+            <div id="dropdown-list">
               {recipes.map((recipe, index) => (
                 <div
                   key={index}
+                  className="dropdown-item"
                   onClick={() => {
                     setMealname(recipe.name);
                     setMacros({
@@ -240,12 +217,6 @@ function AddMeal() {
                     setGrams(recipe.weightOfMeal?.toString() || '');
                     setShowDropdown(false);
                   }}
-                  style={{
-                    padding: '8px',
-                    cursor: 'pointer',
-                    borderBottom: '1px solid #eee',
-                    fontSize: '12px',  // smaller font size
-                  }}
                 >
                   {recipe.name}
                 </div>
@@ -255,27 +226,29 @@ function AddMeal() {
         </div>
       </div>
 
-      <div style={{ margin: '10px' }}>
-        <label>How many grams did you consume? </label>
+      <div id="grams-container">
+        <label htmlFor="grams-input" id='AgramsInput'>How many grams did you consume?</label>
         <input
           type="number"
+          id="grams-input"
           min="0"
           className="input-box"
           value={grams}
           onChange={e => setGrams(e.target.value)}
         />
-        <span> g</span>
+        <span id='Agrams'> g</span>
       </div>
 
-      <p id="enter" style={{ margin: '40px' }}><strong>Enter macros per 100g:</strong></p>
-      <div id="macros">
+      <label id="AmacrosLabel">Enter macros per 100g:</label>
+      <div id="macros-container">
         {macroLabels.map(label => (
-          <div key={label} style={{ margin: '10px' }}>
-            {label}:{' '}
+          <div key={label} className="macro-input-row">
+            <label htmlFor={`macro-${label.toLowerCase()}`} className="macro-label">{label}:</label>
             <input
               type="number"
               min="0"
-              className="input-box"
+              id={`macro-${label.toLowerCase()}`}
+              className="input-box macro-input"
               value={
                 isEditing && grams
                   ? ((parseFloat(per100gRef.current[label]) || 0) * parseFloat(grams) / 100).toFixed(2)
@@ -283,61 +256,21 @@ function AddMeal() {
               }
               onChange={e => handleMacroChange(label, e.target.value)}
             />
-            <span style={{ display: 'inline-block', margin: 0 }}>g</span>
+            <span>g</span>
           </div>
         ))}
       </div>
 
       {errorMessage && (
-        <p style={{ color: 'red', fontSize: '14px', fontWeight: 'bold', margin: '20px' }}>
-          {errorMessage}
-        </p>
+        <p id="error-message">{errorMessage}</p>
       )}
 
       {successMessage && (
-        <p style={{ color: 'green', fontSize: '14px', fontWeight: 'bold', margin: '20px' }}>
-          {successMessage}
-        </p>
+        <p id="success-message">{successMessage}</p>
       )}
 
-      <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-        <button
-          id="cancel"
-          onClick={cancelForm}
-          style={{
-            backgroundColor: '#ff4545',
-            border: '1px solid #333',
-            borderRadius: '15px',
-            padding: '15px 40px',
-            fontSize: '18px',
-            cursor: 'pointer',
-            textTransform: 'uppercase',
-            fontWeight: 'bold',
-            width: 'auto',
-            color: '#ebebeb'
-          }}
-        >
-          Cancel
-        </button>
-
-        <button
-          id="submit"
-          onClick={submitForm}
-          style={{
-            backgroundColor: '#ebebeb',
-            border: '1px solid #333',
-            borderRadius: '15px',
-            padding: '15px 40px',
-            fontSize: '18px',
-            cursor: 'pointer',
-            textTransform: 'uppercase',
-            fontWeight: 'bold',
-            width: 'auto'
-          }}
-        >
-          Submit
-        </button>
-      </div>
+      <button id="AcancelAdd" onClick={cancelForm}>Cancel</button>
+      <button id="AsubAdd" onClick={submitForm}>Submit</button>
     </div>
   );
 }
