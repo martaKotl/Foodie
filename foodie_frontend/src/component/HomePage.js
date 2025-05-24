@@ -9,6 +9,7 @@ ChartJS.register(ArcElement, Tooltip, Legend, Title, DoughnutController);
 function HomePage() {
   const [meals, setMeals] = useState([]); 
   const [goals, setGoals] = useState({});
+  const [showSidebar, setShowSidebar] = useState(false);
   const [showGoalsForm, setShowGoalsForm] = useState(false);
   const [editableGoals, setEditableGoals] = useState({
     calories: '',
@@ -199,12 +200,21 @@ function HomePage() {
 
   return (
     <div>
-      <header>
-        <h1>FOODIE</h1>
-        <img src="/foodie_logo.png" alt="Foodie Logo" id="logo" />
-        <div id="header"></div>
-        <button id="logout" onClick={handleLogout}>Logout</button>
+      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <h1>FOODIE</h1>
+          <img src="/foodie_logo.png" alt="Foodie Logo" id="logo" />
+        </div>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button
+            id="menu"
+            onClick={() => setShowSidebar(true)}
+          >
+            Menu
+          </button>
+        </div>
       </header>
+
 
       <div id="diagrams">
         <div className="cals">
@@ -441,7 +451,65 @@ function HomePage() {
 )}
 
       </div>
+      {showSidebar && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            right: 0,
+            height: '100%',
+            width: '250px',
+            backgroundColor: '#fff',
+            boxShadow: '-2px 0 5px rgba(0,0,0,0.3)',
+            zIndex: 9999,
+            padding: '20px',
+            display: 'flex',
+            flexDirection: 'column',
+            animation: 'slideIn 0.3s forwards',
+          }}
+        >
+          <button
+            onClick={() => setShowSidebar(false)}
+            style={{
+              alignSelf: 'flex-end',
+              background: 'none',
+              border: 'none',
+              fontSize: '18px',
+              cursor: 'pointer',
+            }}
+          >
+            ✖
+          </button>
+
+          <button id="profile" style={{ margin: '10px 0' }}>
+            My Profile
+          </button>
+
+          <button id="recipes" style={{ margin: '10px 0' }}>
+            Browse Recipes
+          </button>
+
+          <button id="bmi_calc" style={{ margin: '10px 0' }}>
+            BMI calculator
+          </button>
+
+          <button id="goal_weight" style={{ margin: '10px 0' }}>
+            Calculate daily calorie surplus/deficit
+          </button>
+          
+          <button id="daily_goals" onClick={openGoalsForm} style={{ margin: '10px 0' }}>
+            Change  daily goals
+          </button>
+
+          <button id="logout" onClick={handleLogout} style={{ margin: '10px 0' }}>
+            Logout
+          </button>
+          
+        </div>
+      )}
+
     </div>
+    
   );
 }
 
