@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, DoughnutController } from 'chart.js';
-import './foodie.css';
 import MealService from '../services/MealService';  
 import DailyGoalsService from '../services/DailyGoalsService';
 

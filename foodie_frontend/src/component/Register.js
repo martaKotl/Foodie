@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import './foodie.css';
 import UserService from '../services/UserService';
 
 function Register() {
@@ -65,81 +66,77 @@ function Register() {
   };
 
   return (
-    <div className="register-container min-h-screen flex items-center justify-center">
-      <div className="flex flex-col items-center">
-      <div className="mx-36 my-8 text-4xl text-slate-700 font-medium">Register</div>
+    <div>
+      <div id='LRbox'>
+      <div id='LRtitl'>Register</div>
       <form onSubmit={handleSubmit}>
-        <div className="mx-8 my-8 text-2xl text-gray-700 font-medium">
-          <div className="">
-            <label htmlFor="username">Username</label>
+        <div id='LRinputs'>
+          <div>
+            <label htmlFor="username" id='RlabelUser'>Username</label>
             <input
               type="text"
-              id="username"
+              id="RinputUser"
               name="username"
               value={formData.username}
               onChange={handleChange}
-              className="w-90 px-4 py-1 mx-8 text-black text-lg font-normal border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
 
-          <div className="my-6">
-            <label htmlFor="email">Email</label>
+          <div>
+            <label htmlFor="email" id='LRlabelEmail'>Email</label>
             <input
               type="email"
-              id="email"
+              id="LRinputEmail"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-90 px-4 py-1 mx-8 text-black text-lg font-normal border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
 
-          <div className="my-6">
-            <label htmlFor="password">Password</label>
+          <div>
+            <label htmlFor="password" id='LRlabelPass'>Password</label>
             <input
               type="password"
-              id="password"
+              id="LRinputPass"
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className="w-90 px-4 py-1 mx-8 text-black text-lg font-normal border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
 
-          <div className="my-6">
-            <label htmlFor="confirmPassword">Confirm Password</label>
+          <div>
+            <label htmlFor="confirmPassword" id='RlabelConf'>Confirm Password</label>
             <input
               type="password"
-              id="confirmPassword"
+              id="RinputConf"
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="w-90 px-4 py-1 mx-8 text-black text-lg font-normal border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
         </div>
 
         {error && (
-          <div className="text-red-600 text-lg font-semibold text-center mt-4 my-2">{error}</div>)}
+          <div id='LRerr'>{error}</div>)}
         {message && (
-          <div className="text-green-600 text-lg font-semibold text-center mt-4 my-2">{message}</div>)}
+          <div id='Rmess'>{message}</div>)}
 
-        <div className="flex flex-col items-center space-y-4 mt-6">
+        <div id='LRbuttons'>
             <button
               type="submit"
-              className="register-btn text-xl rounded bg-blue-600 text-white hover:bg-blue-700 font-semibold px-5 py-2"
+              id='RsubReg'
             >
               Register
             </button>
 
             <button
               type="button"
+              id='RbuttLog'
               onClick={() => navigate("/")}
-              className="register-btn text-base text-blue-600 underline hover:text-blue-800"
             >
               Already have an account? Login instead
             </button>
