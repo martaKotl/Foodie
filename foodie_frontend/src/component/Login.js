@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './foodie.css';
 import UserService from '../services/UserService';
 
 function Login() {
@@ -45,57 +46,55 @@ function Login() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen" style={{ backgroundColor: '#ffeab2' }}>
-      <div className="w-full max-w-md p-8">
-        <div className="text-4xl text-slate-700 font-medium text-center mb-8">Log in</div>
+    <div>
+      <div id='LRbox'>
+        <div id='LRtitl'>Log in</div>
         <form onSubmit={handleSubmit}>
-          <div className="text-gray-700 font-medium text-lg space-y-6">
+          <div id='LRinputs'>
             <div>
-              <label htmlFor="email" className="block mb-1">Email</label>
+              <label htmlFor="email" id='LRlabelEmail'>Email</label>
               <input
                 type="email"
-                id="email"
+                id="LRinputEmail"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-2 text-black border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block mb-1">Password</label>
+              <label htmlFor="password" id='LRlabelPass'>Password</label>
               <input
                 type="password"
-                id="password"
+                id="LRinputPass"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className="w-full px-4 py-2 text-black border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
           </div>
 
-          <div className="flex flex-col items-center space-y-4 mt-6">
+          <div id='LRbuttons'>
             <button
               type="submit"
-              className="text-xl w-full rounded bg-blue-600 text-white hover:bg-blue-700 font-semibold px-3 py-2"
+              id='LsubLog'
             >
               Login
             </button>
 
             <button
               type="button"
+              id='LbuttReg'
               onClick={goToRegister}
-              className="text-base text-blue-600 underline hover:text-blue-800"
             >
-              Don’t have an account? Register instead
+              Don’t have an account? Register
             </button>
           </div>
 
           {error && (
-            <div className="mt-4 text-center text-red-600 font-medium text-[18px] whitespace-nowrap" >
+            <div id='LRerr'>
               {error}
             </div>
           )}

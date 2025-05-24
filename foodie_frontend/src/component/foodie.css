@@ -1,19 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 body {
   margin: 30px;
   text-align: center;
   justify-content: center;
   background-color: #ffeab2;
-  color: #8b0000;
-  font-family: monospace;
+  color: hsl(0, 100%, 27%);
+  font-family: 'Courier Prime', monospace;
   font-size: 28px;
-  line-height: 0.6;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  line-height:0.6
 }
-
-#fot {
-  color: #8b0000;
-}
-
 
 #logout {
   position: absolute;
@@ -140,3 +141,109 @@ th, td {
   padding: 4px 8px;
   box-sizing: border-box;
 }
+
+/*LOGIN REGISTER*/
+
+#LRbox {
+  background-color: #fdedcb;
+  border: 2px solid #8b0000;
+  border-radius: 12px;
+  padding: 30px;
+  width: 90%;
+  max-width: 600px;
+  min-width: 500px;
+  box-shadow: 4px 4px 0 #8b0000;
+  text-align: center;
+}
+
+#LRtitl {
+  font-size: 30px;
+  color: #8b0000;
+  margin-bottom: 25px;
+  text-shadow: 1px 1px 0 #5e0000, 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#LRinputs div{
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+#LRlabelEmail, #LRlabelPass, #RlabelUser, #RlabelConf{
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #8b0000;
+}
+
+#LRinputEmail,
+#LRinputPass,
+#RinputUser,
+#RinputConf {
+  width: 100%;
+  padding: 10px;
+  background-color: #fffaf0;
+  border: 1px solid #8b0000;
+  color: #8b0000;
+  font-size: 10px;
+  font-family: 'Press Start 2P', cursive;
+  outline: none;
+  box-shadow: inset 2px 2px 0 #e6d3a3;
+}
+
+
+#LRbuttons {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#LsubLog, #RsubReg {
+  padding: 10px;
+  background-color: #8b0000;
+  color: #fdedcb;
+  font-size: 14px;
+  font-family: 'Press Start 2P', cursive;
+  border: none;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 #5e0000;
+  transition: transform 0.1s ease;
+}
+
+#LsubLog:hover,
+#RsubReg:hover {
+  transform: translateY(-2px);
+}
+
+#LbuttReg, #RbuttLog{
+  background: none;
+  border: none;
+  color: #8b0000;
+  text-decoration: underline;
+  font-size: 10px;
+  font-family: 'Press Start 2P', cursive;
+  cursor: pointer;
+  margin-top: 10px;
+  padding: 0;
+}
+
+#LbuttReg:hover,
+#RbuttLog:hover {
+  color: #5e0000;
+  text-decoration: none;
+}
+
+#LRerr {
+  margin-top: 15px;
+  color: #cc0000;
+  font-size: 10px;
+  text-shadow: 1px 1px 0 #fff;
+}
+
+#Rmess {
+  margin-top: 15px;
+  color: #247e00;
+  font-size: 10px;
+  text-shadow: 1px 1px 0 #fff;
+}
+
