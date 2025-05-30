@@ -12,6 +12,12 @@ function HomePage() {
   const [goals, setGoals] = useState({});
   const [showSidebar, setShowSidebar] = useState(false);
   const [showGoalsForm, setShowGoalsForm] = useState(false);
+  const [showBmiForm, setShowBmiForm] = useState(false);
+  const [bmiData, setBmiData] = useState({ height: '', weight: '' });
+  const [bmiResult, setBmiResult] = useState(null);
+  const [showSurplusForm, setShowSurplusForm] = useState(false);
+  const [surplusData, setSurplusData] = useState({ tdee: '', intake: '' });
+  const [surplusResult, setSurplusResult] = useState(null);
   const [editableGoals, setEditableGoals] = useState({
     calories: '',
     protein: '',
@@ -20,6 +26,18 @@ function HomePage() {
     water: '',
   });
   const navigate = useNavigate();
+
+  const countSurplusForm = (value) => { 
+    setShowSurplusForm(value);
+   setSurplusData({ tdee: '', intake: '' });
+   setSurplusResult(null);
+  };
+
+  const countBmiForm = (value) => {
+    setShowBmiForm(value);
+    setBmiData({ height: '', weight: '' });
+    setBmiResult(null);
+  };
 
   const chartRefs = useRef({
     calories: null,
@@ -191,6 +209,106 @@ function HomePage() {
         </div>
       )}
 
+{showBmiForm && (
+  <div id="overlay">
+    <form id="Sbmi-form" onSubmit={(e) => {
+      e.preventDefault();
+      const heightM = parseFloat(bmiData.height) / 100;
+      const weight = parseFloat(bmiData.weight);
+      if (heightM > 0 && weight > 0) {
+        const bmi = (weight / (heightM * heightM)).toFixed(2);
+        setBmiResult(bmi);
+      }
+    }}>
+      <h2 id='ScountBMI'>Calculate BMI</h2>
+      <label className='SbmiLabel'>
+        Height (cm):
+        <input
+          type="number"
+          name="height"
+          className='SbmiInput'
+          required
+          min="0"
+          value={bmiData.height}
+          onChange={(e) => setBmiData({ ...bmiData, height: e.target.value })}
+        />
+      </label>
+      <label className='SbmiLabel'>
+        Weight (kg):
+        <input
+          type="number"
+          name="weight"
+          className='SbmiInput'
+          required
+          min="0"
+          value={bmiData.weight}
+          onChange={(e) => setBmiData({ ...bmiData, weight: e.target.value })}
+        />
+      </label>
+      {bmiResult && (
+        <p id='SbmiResult'>Your BMI is: <strong>{bmiResult}</strong></p>
+      )}
+      <div className="form-buttons">
+        <button type="submit" id="SsubBMI">Calculate</button>
+        <button type="button" id="ScloseBMI" onClick={() => setShowBmiForm(false)}>Close</button>
+      </div>
+    </form>
+  </div>
+)}
+
+{showSurplusForm && (
+  <div id="overlay">
+    <form id="Ssurplus-form" onSubmit={(e) => {
+      e.preventDefault();
+      const tdee = parseFloat(surplusData.tdee);
+      const intake = parseFloat(surplusData.intake);
+      if (!isNaN(tdee) && !isNaN(intake)) {
+        const result = intake - tdee;
+        setSurplusResult(result);
+      }
+    }}>
+      <h2 id='ScountSurplus'>jak cos to ma dzialac inaczej ale chat gpt 4o mi sie skonczyl i dokoncze pozniej paa</h2>
+      <label className='SsurplusLabel'>
+        TDEE (your maintenance calories):
+        <input
+          type="number"
+          name="tdee"
+          className='SsurplusInput'
+          required
+          min="0"
+          value={surplusData.tdee}
+          onChange={(e) => setSurplusData({ ...surplusData, tdee: e.target.value })}
+        />
+      </label>
+      <label className='SsurplusLabel'>
+        Actual Intake Today:
+        <input
+          type="number"
+          name="intake"
+          className='SsurplusInput'
+          required
+          min="0"
+          value={surplusData.intake}
+          onChange={(e) => setSurplusData({ ...surplusData, intake: e.target.value })}
+        />
+      </label>
+
+      {surplusResult !== null && (
+        <p>
+          You have a <strong>{Math.abs(surplusResult)}</strong> calorie{' '}
+          <strong>{surplusResult > 0 ? 'surplus' : 'deficit'}</strong> today.
+        </p>
+      )}
+
+      <div className="form-buttons">
+        <button type="submit" id='SsubSurplus'>Calculate</button>
+        <button type="button" id='ScancelSurplus' onClick={() => setShowSurplusForm(false)}>Close</button>
+      </div>
+    </form>
+  </div>
+)}
+
+
       <div id="meal_table">
         {meals.length > 0 ? (
           <table border="1" id="meals">
@@ -227,8 +345,8 @@ function HomePage() {
           <button className="close-sidebar" onClick={() => setShowSidebar(false)}>✖</button>
           <button className='sidebarOption' id="profile">My Profile</button>
           <button className='sidebarOption' id="recipes">Browse Recipes</button>
-          <button className='sidebarOption' id="bmi_calc">BMI calculator</button>
-          <button className='sidebarOption' id="goal_weight">Calculate daily calorie surplus/deficit</button>
+          <button className='sidebarOption' id="bmi_calc" onClick={() => countBmiForm(true)}>BMI calculator</button>
+          <button className='sidebarOption' id="goal_weight" onClick={() => countSurplusForm(true)}>Calculate daily calorie surplus/deficit</button>
           <button className='sidebarOption' id="daily_goals" onClick={() => setShowGoalsForm(true)}>Change daily goals</button>
           <button className='sidebarOption' id="Hlogout" onClick={() => {
             localStorage.removeItem('userId');
