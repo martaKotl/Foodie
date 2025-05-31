@@ -15,9 +15,13 @@ function HomePage() {
   const [showBmiForm, setShowBmiForm] = useState(false);
   const [bmiData, setBmiData] = useState({ height: '', weight: '' });
   const [bmiResult, setBmiResult] = useState(null);
-  const [showSurplusForm, setShowSurplusForm] = useState(false);
-  const [surplusData, setSurplusData] = useState({ tdee: '', intake: '' });
   const [surplusResult, setSurplusResult] = useState(null);
+
+  const [surplusData, setSurplusData] = useState({
+    height: '', weight: '', age: '', sex: '',
+    desiredWeight: '', days: '', activityFactor: ''
+  });
+  
   const [editableGoals, setEditableGoals] = useState({
     calories: '',
     protein: '',
@@ -27,11 +31,17 @@ function HomePage() {
   });
   const navigate = useNavigate();
 
+  const [showSurplusForm, setShowSurplusForm] = useState(false);
   const countSurplusForm = (value) => { 
     setShowSurplusForm(value);
-   setSurplusData({ tdee: '', intake: '' });
-   setSurplusResult(null);
+    setSurplusData({
+     height: '', weight: '', age: '', sex: '',
+     desiredWeight: '', days: '', activityFactor: ''
+    });
+    setSurplusResult(null);
   };
+
+
 
   const countBmiForm = (value) => {
     setShowBmiForm(value);
@@ -185,15 +195,14 @@ function HomePage() {
 
       {showGoalsForm && (
         <div id="overlay">
-          <form id="goals-form" onSubmit={handleGoalsSubmit}>
-            <h2 id='HupdateGoals'>Update Daily Goals</h2>
+          <form className="Sform" onSubmit={handleGoalsSubmit}>
+            <h2 className='Sheader'>Update Daily Goals</h2>
             {['calories', 'protein', 'carbs', 'fat', 'water'].map(nutrient => (
-              <label key={nutrient} className='HnutrientLabel'>
+              <label key={nutrient}>
                 {nutrient.charAt(0).toUpperCase() + nutrient.slice(1)}:
                 <input
                   type="number"
                   name={nutrient}
-                  className='HnutrientInput'
                   value={editableGoals[nutrient]}
                   onChange={handleInputChange}
                   required
@@ -202,8 +211,8 @@ function HomePage() {
               </label>
             ))}
             <div className="form-buttons">
-              <button type="submit" id="HsubGoals">Submit</button>
-              <button type="button" id="HcancelGoals" onClick={() => setShowGoalsForm(false)}>Cancel</button>
+              <button type="submit">Submit</button>
+              <button type="button" className='cancelButton' onClick={() => setShowGoalsForm(false)}>Cancel</button>
             </div>
           </form>
         </div>
@@ -211,7 +220,7 @@ function HomePage() {
 
 {showBmiForm && (
   <div id="overlay">
-    <form id="Sbmi-form" onSubmit={(e) => {
+    <form className="Sform" onSubmit={(e) => {
       e.preventDefault();
       const heightM = parseFloat(bmiData.height) / 100;
       const weight = parseFloat(bmiData.weight);
@@ -220,25 +229,23 @@ function HomePage() {
         setBmiResult(bmi);
       }
     }}>
-      <h2 id='ScountBMI'>Calculate BMI</h2>
-      <label className='SbmiLabel'>
+      <h2 className='Sheader'>Calculate BMI</h2>
+      <label>
         Height (cm):
         <input
           type="number"
           name="height"
-          className='SbmiInput'
           required
           min="0"
           value={bmiData.height}
           onChange={(e) => setBmiData({ ...bmiData, height: e.target.value })}
         />
       </label>
-      <label className='SbmiLabel'>
+      <label>
         Weight (kg):
         <input
           type="number"
           name="weight"
-          className='SbmiInput'
           required
           min="0"
           value={bmiData.weight}
@@ -246,67 +253,107 @@ function HomePage() {
         />
       </label>
       {bmiResult && (
-        <p id='SbmiResult'>Your BMI is: <strong>{bmiResult}</strong></p>
+        <p className='Sheader'>Your BMI is: <strong>{bmiResult}</strong></p>
       )}
       <div className="form-buttons">
-        <button type="submit" id="SsubBMI">Calculate</button>
-        <button type="button" id="ScloseBMI" onClick={() => setShowBmiForm(false)}>Close</button>
+        <button type="submit">Calculate</button>
+        <button type="button" className='cancelButton' onClick={() => setShowBmiForm(false)}>Close</button>
       </div>
     </form>
   </div>
 )}
-
 {showSurplusForm && (
   <div id="overlay">
-    <form id="Ssurplus-form" onSubmit={(e) => {
+    <form className="Sform" onSubmit={(e) => {
       e.preventDefault();
-      const tdee = parseFloat(surplusData.tdee);
-      const intake = parseFloat(surplusData.intake);
-      if (!isNaN(tdee) && !isNaN(intake)) {
-        const result = intake - tdee;
-        setSurplusResult(result);
+
+      const { height, weight, age, sex, desiredWeight, days, activityFactor } = surplusData;
+      const H = parseFloat(height);
+      const W = parseFloat(weight);
+      const A = parseFloat(age);
+      const DW = parseFloat(desiredWeight);
+      const D = parseFloat(days);
+      const AF = parseFloat(activityFactor);
+
+      if ([H, W, A, DW, D, AF].some(isNaN) || !sex) {
+        alert('Please fill all fields correctly.');
+        return;
       }
+
+      let targetCalories;
+
+      if (sex === 'male') {
+        targetCalories = ((10 * W + 6.25 * H - 5 * A + 5) * AF) - ((W - DW) * 7700 / D);
+      } else {
+        targetCalories = ((10 * W + 6.25 * H - 5 * A - 161) * AF) - ((W - DW) * 7700 / D);
+      }
+
+      setSurplusResult(Math.round(targetCalories));
     }}>
-      <h2 id='ScountSurplus'>jak cos to ma dzialac inaczej ale chat gpt 4o mi sie skonczyl i dokoncze pozniej paa</h2>
-      <label className='SsurplusLabel'>
-        TDEE (your maintenance calories):
-        <input
-          type="number"
-          name="tdee"
-          className='SsurplusInput'
-          required
-          min="0"
-          value={surplusData.tdee}
-          onChange={(e) => setSurplusData({ ...surplusData, tdee: e.target.value })}
-        />
+      <h2 className='Sheader'>Calculate suggested daily intake</h2>
+
+      <label>Height (cm): 
+        <input type="number" required min="0" value={surplusData.height}
+          onChange={e => setSurplusData({ ...surplusData, height: e.target.value })} />
       </label>
-      <label className='SsurplusLabel'>
-        Actual Intake Today:
-        <input
-          type="number"
-          name="intake"
-          className='SsurplusInput'
-          required
-          min="0"
-          value={surplusData.intake}
-          onChange={(e) => setSurplusData({ ...surplusData, intake: e.target.value })}
-        />
+      <label>Weight (kg): 
+        <input type="number" required min="0" value={surplusData.weight}
+          onChange={e => setSurplusData({ ...surplusData, weight: e.target.value })} />
+      </label>
+      <label>Age: 
+        <input type="number" required min="0" value={surplusData.age}
+          onChange={e => setSurplusData({ ...surplusData, age: e.target.value })} />
       </label>
 
+      <div id='SsexOptions'>
+        <label><input type="radio" name="sex" value="male"
+          checked={surplusData.sex === 'male'}
+          onChange={e => setSurplusData({ ...surplusData, sex: e.target.value })} /> Male</label>
+        <label><input type="radio" name="sex" value="female"
+          checked={surplusData.sex === 'female'}
+          onChange={e => setSurplusData({ ...surplusData, sex: e.target.value })} /> Female</label>
+      </div>
+
+      <label>Desired Weight (kg):
+        <input type="number" min="1" max="300" required value={surplusData.desiredWeight}
+          onChange={e => setSurplusData({ ...surplusData, desiredWeight: e.target.value })} />
+      </label>
+
+      <label>Days to achieve goal:
+        <input type="number" min="1" max="365" required value={surplusData.days}
+          onChange={e => setSurplusData({ ...surplusData, days: e.target.value })} />
+      </label>
+
+      <fieldset>
+        <legend className='Sheader'>Activity Factor</legend>
+        {[
+          { label: 'Little/no exercise', value: 1.2 },
+          { label: 'Lightly active (1–3 days/week)', value: 1.375 },
+          { label: 'Moderately active (3–5 days/week)', value: 1.55 },
+          { label: 'Very active (6–7 days/week)', value: 1.725 },
+          { label: 'Super active (athlete, physical job)', value: 1.9 },
+        ].map((opt) => (
+          <label key={opt.value}>
+            <input type="radio" name="activityFactor" value={opt.value}
+              checked={parseFloat(surplusData.activityFactor) === opt.value}
+              onChange={(e) => setSurplusData({ ...surplusData, activityFactor: e.target.value })} />
+            {opt.label}
+          </label>
+        ))}
+      </fieldset>
+
       {surplusResult !== null && (
-        <p>
-          You have a <strong>{Math.abs(surplusResult)}</strong> calorie{' '}
-          <strong>{surplusResult > 0 ? 'surplus' : 'deficit'}</strong> today.
-        </p>
+        <p className='Sheader'>Your target daily calories: <strong>{surplusResult}</strong></p>
       )}
 
       <div className="form-buttons">
-        <button type="submit" id='SsubSurplus'>Calculate</button>
-        <button type="button" id='ScancelSurplus' onClick={() => setShowSurplusForm(false)}>Close</button>
+        <button type="submit">Submit</button>
+        <button type="button" className='cancelButton' onClick={() => setShowSurplusForm(false)}>Cancel</button>
       </div>
     </form>
   </div>
 )}
+
 
 
       <div id="meal_table">
@@ -337,7 +384,7 @@ function HomePage() {
               ))}
             </tbody>
           </table>
-        ) : <p className="empty-msg">Add a meal to see it here!</p>}
+        ) : <p className="Sheader">Add a meal to see it here!</p>}
       </div>
 
       {showSidebar && (
@@ -346,7 +393,7 @@ function HomePage() {
           <button className='sidebarOption' id="profile">My Profile</button>
           <button className='sidebarOption' id="recipes">Browse Recipes</button>
           <button className='sidebarOption' id="bmi_calc" onClick={() => countBmiForm(true)}>BMI calculator</button>
-          <button className='sidebarOption' id="goal_weight" onClick={() => countSurplusForm(true)}>Calculate daily calorie surplus/deficit</button>
+          <button className='sidebarOption' id="goal_weight" onClick={() => countSurplusForm(true)}>Calculate suggested daily intake</button>
           <button className='sidebarOption' id="daily_goals" onClick={() => setShowGoalsForm(true)}>Change daily goals</button>
           <button className='sidebarOption' id="Hlogout" onClick={() => {
             localStorage.removeItem('userId');

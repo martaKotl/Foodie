@@ -227,7 +227,7 @@ function AddMeal() {
       </div>
 
       <div id="grams-container">
-        <label htmlFor="grams-input" id='AgramsInput'>How many grams did you consume?</label>
+        <label htmlFor="grams-input" id='AgramsLabel'>How many grams did you consume?</label>
         <input
           type="number"
           id="grams-input"
