@@ -16,6 +16,20 @@ body {
   height: 100vh;
 }
 
+input {
+  width: 100%;
+  padding: 8px;
+  background-color: #fffaf0;
+  border: 1px solid #8b0000;
+  color: #8b0000;
+  font-size: 18px;
+  font-family: 'Courier Prime', monospace;
+  line-height:1;
+  outline: none;
+  box-shadow: inset 2px 2px 0 #e6d3a3;
+  margin-top: 5px;
+}
+
 /*HOMEPAGE*/
 
 #Hheader{
@@ -29,6 +43,7 @@ body {
   margin: 0;
   justify-content: center;  
   flex-direction: column;
+  margin-top: -250px;
 }
 
 #header-buttons {
@@ -94,12 +109,6 @@ body {
   transition: transform 0.1s ease;
   margin-right: 5px;
   margin-left: 5px;
-}
-
-.empty-msg {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  text-align: center;
 }
 
 /*DIAGRAMS*/
@@ -168,88 +177,14 @@ table {
 
 /*GOALS*/
 
-#goals-form {
-  background-color: #fdedcb;
-  border: 4px solid #8b0000;
-  border-radius: 12px;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-  min-width: 300px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-#HupdateGoals {
+.Sheader {
   padding: 12px 8px;
   font-size: 18px; 
   font-family: 'Press Start 2P', cursive;
   line-height:1;
-}
-
-.HnutrientLabel {
-  padding: 2px;
-  font-size: 14px; 
-  font-family: 'Press Start 2P', cursive;
-  line-height:1;
-}
-
-.HnutrientInput {
-  width: 100%;
-  padding: 8px;
-  background-color: #fffaf0;
-  border: 1px solid #8b0000;
-  color: #8b0000;
-  font-size: 18px;
-  font-family: 'Courier Prime', monospace;
-  line-height:1;
-  outline: none;
-  box-shadow: inset 2px 2px 0 #e6d3a3;
-  margin-top: 5px;
-}
-
-#HsubGoals, #HcancelGoals {
-  padding: 10px;
-  background-color: #8b0000;
-  color: #fdedcb;
-  font-size: 14px;
-  font-family: 'Press Start 2P', cursive;
-  line-height:1;
-  border: none;
-  cursor: pointer;
-  box-shadow: 2px 2px 0 #5e0000;
-  transition: transform 0.1s ease;
-  margin-right: 5px;
-  margin-left: 5px;
-}
-
-#HsubGoals:hover,
-#HcancelGoals:hover {
-  transform: translateY(-2px);
 }
 
 /*BMI*/
-
-#Sbmi-form {
-  background-color: #fdedcb;
-  border: 4px solid #8b0000;
-  border-radius: 12px;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-  min-width: 300px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-#ScountBMI {
-  padding: 12px 8px;
-  font-size: 18px; 
-  font-family: 'Press Start 2P', cursive;
-  line-height:1;
-}
 
 .SbmiLabel {
   padding: 2px;
@@ -258,48 +193,71 @@ table {
   line-height:1;
 }
 
-.SbmiInput {
-  width: 100%;
-  padding: 8px;
-  background-color: #fffaf0;
-  border: 1px solid #8b0000;
-  color: #8b0000;
-  font-size: 18px;
-  font-family: 'Courier Prime', monospace;
-  line-height:1;
-  outline: none;
-  box-shadow: inset 2px 2px 0 #e6d3a3;
-  margin-top: 5px;
-}
-
-#SsubBMI, #HcloseBMI {
-  padding: 10px;
-  background-color: #8b0000;
-  color: #fdedcb;
-  font-size: 14px;
-  font-family: 'Press Start 2P', cursive;
-  line-height:1;
-  border: none;
-  cursor: pointer;
-  box-shadow: 2px 2px 0 #5e0000;
-  transition: transform 0.1s ease;
-  margin-right: 5px;
-  margin-left: 5px;
-}
-
-#SsubBMI:hover,
-#HScloseBMI:hover {
-  transform: translateY(-2px);
-}
 
 /*SURPLUS*/
 
-#Ssurplus-form {
+#SsexOptions {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+}
+
+input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #8b0000;
+  border-radius: 0; /* square */
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  background-color: #fffaf0;
+  margin-right: 8px;
+}
+
+input[type="radio"]:checked::before {
+  content: '×';
+  font-family: monospace;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  color: #8b0000;
+  font-weight: bold;
+  user-select: none;
+  pointer-events: none;
+}
+
+.Sform label {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 14px;
+  line-height: 1;
+  display: flex; 
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  margin-bottom: 8px; 
+}
+
+.Sform input[type="radio"] {
+  margin: 0;
+  width: 16px;
+  height: 16px;
+}
+
+/*SIDEBAR*/
+
+.Sform {
   background-color: #fdedcb;
   border: 4px solid #8b0000;
   border-radius: 12px;
   padding: 30px;
-  border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.3);
   min-width: 300px;
   display: flex;
@@ -307,35 +265,14 @@ table {
   gap: 15px;
 }
 
-#ScountSurplus {
+.Sheader {
   padding: 12px 8px;
   font-size: 18px; 
   font-family: 'Press Start 2P', cursive;
   line-height:1;
 }
 
-.SsurplusLabel {
-  padding: 2px;
-  font-size: 14px; 
-  font-family: 'Press Start 2P', cursive;
-  line-height:1;
-}
-
-.SsurplusInput {
-  width: 100%;
-  padding: 8px;
-  background-color: #fffaf0;
-  border: 1px solid #8b0000;
-  color: #8b0000;
-  font-size: 18px;
-  font-family: 'Courier Prime', monospace;
-  line-height:1;
-  outline: none;
-  box-shadow: inset 2px 2px 0 #e6d3a3;
-  margin-top: 5px;
-}
-
-#SsubSurplus, #ScancelSurplus {
+button[type="submit"] {
   padding: 10px;
   background-color: #8b0000;
   color: #fdedcb;
@@ -350,12 +287,28 @@ table {
   margin-left: 5px;
 }
 
-#SsubSurplus:hover,
-#ScancelSurplus:hover {
+button[type="submit"]:hover {
   transform: translateY(-2px);
 }
 
-/*SIDEBAR*/
+.cancelButton {
+  padding: 10px;
+  background-color: #8b0000;
+  color: #fdedcb;
+  font-size: 14px;
+  font-family: 'Press Start 2P', cursive;
+  line-height:1;
+  border: none;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 #5e0000;
+  transition: transform 0.1s ease;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
+.cancelButton:hover {
+  transform: translateY(-2px);
+}
 
 #Hsidebar {
   position: fixed;
@@ -428,16 +381,10 @@ table {
 }
 
 #Aheader {
-  padding: 30px;
-  display: flex;
+  padding: 12px 8px;
+  font-size: 30px; 
   font-family: 'Press Start 2P', cursive;
   line-height:1;
-  align-items: center;  
-  font-size: 30px; 
-  font-weight: bold; 
-  margin: 20;
-  justify-content: center;  
-  flex-direction: column;
 }
 
 #Abox {
@@ -464,12 +411,17 @@ table {
   font-family: 'Courier Prime', monospace;
 }
 
-
+#dropdown-list {
+  background-color: #fdedcb;
+  
+}
 
 .dropdown-item {
   padding: 8px;
   cursor: pointer;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #8b0000;
+  border-left: 1px solid #8b0000;
+  border-right: 1px solid #8b0000;
   font-size: 12px;
 }
 
@@ -477,9 +429,9 @@ table {
   background-color: #f0f0f0;
 }
 
-#AgramsInput {
+#AgramsLabel{
   padding: 8px;
-  font-family: 'Courier Prime', monospace;
+  font-family: 'Press Start 2P', cursive;
   line-height:1;
   font-size: 18px;
 }
@@ -500,7 +452,8 @@ table {
   font-family: 'Press Start 2P', cursive;
   line-height:1;
   font-size: 20px;
-  padding: 100px;
+  margin: 20px; /* or any value you want */
+  display: block;
 }
 
 #macros-container {
