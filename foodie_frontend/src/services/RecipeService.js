@@ -8,7 +8,7 @@ class RecipeService {
     return axios.get(`${Foodie_base_URL}/recipes`)
       .then(response => {
         if (response.data.success) {
-          return response.data.data; // return the actual list of recipes
+          return response.data.data;
         } else {
           throw new Error(response.data.message || "Failed to fetch recipes.");
         }
@@ -18,6 +18,10 @@ class RecipeService {
         throw error;
       });
   }
+
+  getRecipeById(id) {
+  return axios.get(`${Foodie_base_URL}/recipes/${id}`);
+}
 
 }
 
