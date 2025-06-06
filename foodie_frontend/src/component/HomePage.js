@@ -41,7 +41,9 @@ function HomePage() {
     setSurplusResult(null);
   };
 
-
+  const handleBrowseRecipes = () => {
+    navigate("/browse-recipes");
+  };
 
   const countBmiForm = (value) => {
     setShowBmiForm(value);
@@ -391,7 +393,7 @@ function HomePage() {
         <div id="Hsidebar">
           <button className="close-sidebar" onClick={() => setShowSidebar(false)}>✖</button>
           <button className='sidebarOption' id="profile">My Profile</button>
-          <button className='sidebarOption' id="recipes">Browse Recipes</button>
+          <button className='sidebarOption' id="recipes" onClick={handleBrowseRecipes}>Browse Recipes</button>
           <button className='sidebarOption' id="bmi_calc" onClick={() => countBmiForm(true)}>BMI calculator</button>
           <button className='sidebarOption' id="goal_weight" onClick={() => countSurplusForm(true)}>Calculate suggested daily intake</button>
           <button className='sidebarOption' id="daily_goals" onClick={() => setShowGoalsForm(true)}>Change daily goals</button>

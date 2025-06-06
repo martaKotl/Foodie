@@ -30,4 +30,12 @@ public class RecipeController {
                 new ResultMessage("Recipes retrieved successfully", true, recipes)
         );
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getRecipeById(@PathVariable Long id) {
+        return recipeService.getRecipeById(id)
+                .map(recipe -> ResponseEntity.ok().body(recipe))
+                .orElseGet(() -> ResponseEntity.status(404).body(
+                        new ResultMessage("Recipe not found", false)
+                ));
+    }
 }

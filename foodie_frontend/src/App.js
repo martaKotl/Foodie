@@ -6,6 +6,8 @@ import VerifyAccount from "./component/VerifyAccount";
 import Login from "./component/Login";
 import HomePage from "./component/HomePage";
 import AddMeal from "./component/AddMeal";
+import BrowseRecipes from './component/BrowseRecipes';
+import RecipeDetails from './component/RecipeDetails';
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = !!localStorage.getItem('userId');
@@ -24,6 +26,8 @@ function App() {
           <Route path="/verify" element={<VerifyAccount />} />
           <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
           <Route path="/home/add_a_meal" element={<ProtectedRoute><AddMeal /></ProtectedRoute>} />
+          <Route path="/browse-recipes" element={<ProtectedRoute><BrowseRecipes /></ProtectedRoute>} />
+          <Route path="/recipes/:id" element={<ProtectedRoute><RecipeDetails /></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>
     </div>

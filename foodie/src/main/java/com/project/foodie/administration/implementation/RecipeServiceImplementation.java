@@ -6,6 +6,7 @@ import com.project.foodie.database.RecipeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RecipeServiceImplementation implements RecipeService {
@@ -19,5 +20,10 @@ public class RecipeServiceImplementation implements RecipeService {
     @Override
     public List<RecipeEntity> getAllRecipes() {
         return recipeRepository.findAll();
+    }
+
+    @Override
+    public Optional<RecipeEntity> getRecipeById(Long id) {
+        return recipeRepository.findById(id);
     }
 }
