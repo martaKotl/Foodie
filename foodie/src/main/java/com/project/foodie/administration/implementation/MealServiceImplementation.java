@@ -60,7 +60,6 @@ public class MealServiceImplementation implements MealService {
                     HistoryMealEntity toAdd = mealEntityToHistoryMealEntity(meal);
                     toAdd.setId(null);
                     historyMealRepository.save(toAdd);
-                    System.out.println("Saved meal to history with ID: " + toAdd.getId());
                 }
             }
             mealRepository.deleteByUserId(userId);
