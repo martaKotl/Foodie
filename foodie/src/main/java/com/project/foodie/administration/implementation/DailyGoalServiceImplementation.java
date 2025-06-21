@@ -33,9 +33,7 @@ public class DailyGoalServiceImplementation implements DailyGoalService {
         DailyGoalEntity entity = dailyGoalRepository.findByUserId(userId);
         if (entity == null) {
             entity = new DailyGoalEntity();
-            UserEntity user = new UserEntity();
-            user.setId(userId);
-            entity.setUser(user);
+            entity.setUserId(userId);
         }
 
         entity.setCalories(dto.getCalories());
