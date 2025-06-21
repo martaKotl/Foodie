@@ -8,6 +8,8 @@ import HomePage from "./component/HomePage";
 import AddMeal from "./component/AddMeal";
 import BrowseRecipes from './component/BrowseRecipes';
 import RecipeDetails from './component/RecipeDetails';
+import History from './component/History';
+
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = !!localStorage.getItem('userId');
@@ -28,6 +30,8 @@ function App() {
           <Route path="/home/add_a_meal" element={<ProtectedRoute><AddMeal /></ProtectedRoute>} />
           <Route path="/browse-recipes" element={<ProtectedRoute><BrowseRecipes /></ProtectedRoute>} />
           <Route path="/recipes/:id" element={<ProtectedRoute><RecipeDetails /></ProtectedRoute>} />
+          <Route path="/home/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
+
         </Routes>
       </BrowserRouter>
     </div>

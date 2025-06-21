@@ -18,8 +18,8 @@ const BrowseRecipes = () => {
   };
 
   return (
-    <div className="bg-yellow-100 min-h-screen font-['Press_Start_2P'] text-sm text-red-900">
-      <div className="text-center pt-8 px-4 sm:px-8">
+    <div className="min-h-screen font-['Press_Start_2P'] text-sm text-red-900 flex justify-center items-start pt-8">
+      <div className="bg-yellow-100 text-center px-4 py-6 sm:px-8 rounded-xl shadow-lg max-w-4xl w-full">
         <h1 className="text-3xl mb-4">Browse Recipes</h1>
         <p className="mb-6">
           <span className="cursor-pointer underline" onClick={() => navigate("/home")}>
