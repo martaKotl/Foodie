@@ -12,8 +12,8 @@ body {
   padding: 0;
   line-height:0.6;
   display: flex;
-  align-items: center;
-  height: 100vh;
+  flex-direction: column;   
+  min-height: 100vh;  
 }
 
 input {
@@ -46,10 +46,8 @@ input {
   align-items: center;  
   font-size: 48px; 
   font-weight: bold; 
-  margin: 0;
   justify-content: center;  
   flex-direction: column;
-  margin-top: -250px;
 }
 
 #header-buttons {
@@ -165,12 +163,6 @@ table td {
   line-height:0.8;
 }
 
-table {
-  width: 500px;
-  height: 30px;
-  margin: 0;
-  text-align: center;
-}
 
 table {
   border-collapse: collapse;
@@ -717,3 +709,4 @@ button[type="submit"]:hover {
   cursor: pointer;
   color: #611010;
 }
+

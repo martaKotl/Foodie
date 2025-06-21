@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, DoughnutController } from 'chart.js';
 import MealService from '../services/MealService';  
 import DailyGoalsService from '../services/DailyGoalsService';
+import HistoryService from '../services/HistoryService';
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title, DoughnutController);
 
@@ -161,6 +162,14 @@ function HomePage() {
     MealService.deleteMealsByUserId(userId)
       .then(() => setMeals([]))
       .catch(console.error);
+
+    HistoryService.getHistoryMealsByUserId(userId)
+      .then(historyMeals => {
+        console.log("History meals:", historyMeals);
+      })
+      .catch(error => {
+        console.error("Error fetching history meals:", error);
+      });
   };
 
   return (
@@ -393,6 +402,7 @@ function HomePage() {
         <div id="Hsidebar">
           <button className="close-sidebar" onClick={() => setShowSidebar(false)}>✖</button>
           <button className='sidebarOption' id="profile">My Profile</button>
+          <button className='sidebarOption' id="history" onClick={() => navigate('/home/history')}>Show eating history</button>
           <button className='sidebarOption' id="recipes" onClick={handleBrowseRecipes}>Browse Recipes</button>
           <button className='sidebarOption' id="bmi_calc" onClick={() => countBmiForm(true)}>BMI calculator</button>
           <button className='sidebarOption' id="goal_weight" onClick={() => countSurplusForm(true)}>Calculate suggested daily intake</button>

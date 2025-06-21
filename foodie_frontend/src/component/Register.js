@@ -66,8 +66,8 @@ function Register() {
   };
 
   return (
-    <div>
-      <div id='LRbox'>
+  <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
+    <div id='LRbox'>
       <div id='LRtitl'>Register</div>
       <form onSubmit={handleSubmit}>
         <div id='LRinputs'>
@@ -120,32 +120,21 @@ function Register() {
           </div>
         </div>
 
-        {error && (
-          <div id='LRerr'>{error}</div>)}
-        {message && (
-          <div id='Rmess'>{message}</div>)}
+        {error && <div id='LRerr'>{error}</div>}
+        {message && <div id='Rmess'>{message}</div>}
 
         <div id='LRbuttons'>
-            <button
-              type="submit"
-              id='RsubReg'
-            >
-              Register
-            </button>
+          <button type="submit" id='RsubReg'>Register</button>
 
-            <button
-              type="button"
-              id='RbuttLog'
-              onClick={() => navigate("/")}
-            >
-              Already have an account? Login instead
-            </button>
-          </div>
-        
+          <button type="button" id='RbuttLog' onClick={() => navigate("/")}>
+            Already have an account? Login instead
+          </button>
+        </div>
       </form>
     </div>
-    </div>
-  );
+  </div>
+);
+
 }
 
 export default Register
