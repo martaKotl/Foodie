@@ -5,6 +5,7 @@ import RecipeService from "../services/RecipeService";
 const BrowseRecipes = () => {
   const [recipes, setRecipes] = useState([]);
   const [openRecipeId, setOpenRecipeId] = useState(null);
+  const [showStepsId, setShowStepsId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,6 +16,11 @@ const BrowseRecipes = () => {
 
   const toggleDetails = (id) => {
     setOpenRecipeId((prev) => (prev === id ? null : id));
+    setShowStepsId(null);
+  };
+
+  const toggleSteps = (id) => {
+  setShowStepsId((prev) => (prev === id ? null : id));
   };
 
   return (
@@ -42,6 +48,17 @@ const BrowseRecipes = () => {
                   <p><strong>Diet:</strong> {recipe.dietCategory}</p>
                   <p><strong>Prep time:</strong> {recipe.prepTimeMinutes} minutes</p>
                   <p><strong>Ingredients:</strong> {recipe.ingredients}</p>
+                  <p
+                    className="mt-2 underline text-red-600 cursor-pointer"
+                    onClick={() => toggleSteps(recipe.id)}
+                  >
+                  {showStepsId === recipe.id ? "Hide Steps" : "Show Steps"}
+                  </p>
+                  {showStepsId === recipe.id && (
+                    <pre className="Recipe-steps">
+                      {recipe.steps}
+                    </pre>
+                  )}
                 </div>
               )}
             </li>
