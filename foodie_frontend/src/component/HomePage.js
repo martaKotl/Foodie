@@ -84,12 +84,15 @@ function HomePage() {
   const createDonutChart = (id, consumed, goal, color, label) => {
     const canvas = document.getElementById(id);
     if (!canvas) return;
-
+  
     const remaining = Math.max(goal - consumed, 0);
-
+  
     if (chartRefs.current[id]) {
-      chartRefs.current[id].data.datasets[0].data = [consumed, remaining];
-      chartRefs.current[id].update();
+      const chart = chartRefs.current[id];
+      chart.data.datasets[0].data = [consumed, remaining];
+      chart.data.datasets[0].backgroundColor = [color, '#e0e0e0'];
+  
+      chart.update();
     } else {
       chartRefs.current[id] = new ChartJS(canvas, {
         type: 'doughnut',
@@ -111,6 +114,7 @@ function HomePage() {
       });
     }
   };
+  
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
@@ -124,13 +128,45 @@ function HomePage() {
 
   useEffect(() => {
     if (!goals || Object.keys(goals).length === 0) return;
-
+  
     const consumed = recalculateConsumedData(meals || []);
-    createDonutChart('idcals', consumed.calories, goals.calories || 2000, '#ff6384', 'Calories');
-    createDonutChart('carbs', consumed.carbs, goals.carbs || 250, '#4bc0c0', 'Carbs');
-    createDonutChart('fats', consumed.fat, goals.fat || 70, '#ffcd56', 'Fat');
-    createDonutChart('proteins', consumed.protein, goals.protein || 100, '#36a2eb', 'Protein');
+  
+    const getColor = (consumedValue, goalValue, defaultColor) =>
+      consumedValue > goalValue ? '#ff0000' : defaultColor;
+  
+    createDonutChart(
+      'idcals',
+      consumed.calories,
+      goals.calories || 2000,
+      getColor(consumed.calories, goals.calories || 2000, '#ff6384'),
+      'Calories'
+    );
+  
+    createDonutChart(
+      'carbs',
+      consumed.carbs,
+      goals.carbs || 250,
+      getColor(consumed.carbs, goals.carbs || 250, '#4bc0c0'),
+      'Carbs'
+    );
+  
+    createDonutChart(
+      'fats',
+      consumed.fat,
+      goals.fat || 70,
+      getColor(consumed.fat, goals.fat || 70, '#ffcd56'),
+      'Fat'
+    );
+  
+    createDonutChart(
+      'proteins',
+      consumed.protein,
+      goals.protein || 100,
+      getColor(consumed.protein, goals.protein || 100, '#36a2eb'),
+      'Protein'
+    );
   }, [meals, goals]);
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -212,11 +248,11 @@ function HomePage() {
                 {nutrient.charAt(0).toUpperCase() + nutrient.slice(1)}:
                 <input
                   type="number"
+                  min="0"
                   name={nutrient}
                   value={editableGoals[nutrient]}
                   onChange={handleInputChange}
                   required
-                  min="0"
                 />
               </label>
             ))}
@@ -405,8 +441,18 @@ function HomePage() {
           <button className='sidebarOption' id="recipes" onClick={handleBrowseRecipes}>Browse Recipes</button>
           <button className='sidebarOption' id="bmi_calc" onClick={() => countBmiForm(true)}>BMI calculator</button>
           <button className='sidebarOption' id="goal_weight" onClick={() => countSurplusForm(true)}>Calculate suggested daily intake</button>
-          <button className='sidebarOption' id="daily_goals" onClick={() => setShowGoalsForm(true)}>Change daily goals</button>
-          <button className='sidebarOption' onClick={() => setShowMusicPanel(!showMusicPanel)}>Music Settings</button>
+
+          <button
+          className='sidebarOption'
+          id="daily_goals"
+          onClick={() => {
+            setEditableGoals(goals); 
+            setShowGoalsForm(true);
+          }}
+        >
+          Change daily goals
+        </button>
+        <button className='sidebarOption' onClick={() => setShowMusicPanel(!showMusicPanel)}>Music Settings</button>
           <button className='sidebarOption' id="Hlogout" onClick={() => {
             localStorage.removeItem('userId');
             navigate('/');

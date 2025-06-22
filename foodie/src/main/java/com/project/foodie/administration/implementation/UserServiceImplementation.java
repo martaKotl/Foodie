@@ -92,7 +92,7 @@ public class UserServiceImplementation implements UserService {
             VerificationTokenEntity verificationToken = VerificationTokenEntity.builder()
                     .token(token)
                     .user(createdUserEntity)
-                    .expiryDate(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000)) // Token jest ważny 24h
+                    .expiryDate(new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000))
                     .build();
             tokenRepository.save(verificationToken);
 
