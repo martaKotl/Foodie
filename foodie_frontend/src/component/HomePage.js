@@ -5,6 +5,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, DoughnutControlle
 import MealService from '../services/MealService';  
 import DailyGoalsService from '../services/DailyGoalsService';
 import MusicToggle from "./MusicToggle";
+import HistoryService from '../services/HistoryService';
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title, DoughnutController);
 
@@ -163,18 +164,23 @@ function HomePage() {
     MealService.deleteMealsByUserId(userId)
       .then(() => setMeals([]))
       .catch(console.error);
+
+    HistoryService.getHistoryMealsByUserId(userId)
+      .then(historyMeals => {
+        console.log("History meals:", historyMeals);
+      })
+      .catch(error => {
+        console.error("Error fetching history meals:", error);
+      });
   };
 
   return (
     <div>
       <header id='Hheader'>
-        <div>
-          <h1>FOODIE</h1>
-        </div>
-        <div id="header-buttons">
-          <button id="menu" onClick={() => setShowSidebar(true)}>☰</button>
-        </div>
+        <div>FOODIE</div>
+        <button id="menu" onClick={() => setShowSidebar(true)}>☰</button>
       </header>
+
 
       <div id="diagrams">
         <div className="cals">
@@ -395,6 +401,7 @@ function HomePage() {
         <div id="Hsidebar">
           <button className="close-sidebar" onClick={() => setShowSidebar(false)}>✖</button>
           <button className='sidebarOption' id="profile">My Profile</button>
+          <button className='sidebarOption' id="history" onClick={() => navigate('/home/history')}>Show eating history</button>
           <button className='sidebarOption' id="recipes" onClick={handleBrowseRecipes}>Browse Recipes</button>
           <button className='sidebarOption' id="bmi_calc" onClick={() => countBmiForm(true)}>BMI calculator</button>
           <button className='sidebarOption' id="goal_weight" onClick={() => countSurplusForm(true)}>Calculate suggested daily intake</button>

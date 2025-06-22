@@ -9,6 +9,8 @@ import HomePage from "./component/HomePage";
 import AddMeal from "./component/AddMeal";
 import BrowseRecipes from './component/BrowseRecipes';
 import RecipeDetails from './component/RecipeDetails';
+import History from './component/History';
+
 
 
 const ProtectedRoute = ({ children }) => {
@@ -33,6 +35,7 @@ function App() {
           <Route path="/browse-recipes" element={<ProtectedRoute><BrowseRecipes /></ProtectedRoute>} />
           <Route path="/recipes/:id" element={<ProtectedRoute><RecipeDetails /></ProtectedRoute>} />
           <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
+          <Route path="/home/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
         </Routes>
       </BrowserRouter>
       

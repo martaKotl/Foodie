@@ -16,10 +16,12 @@ import java.util.Optional;
 public class MealServiceImplementation implements MealService {
 
     private final MealRepository mealRepository;
+    private final HistoryMealRepository historyMealRepository;
 
     @Autowired
-    public MealServiceImplementation(final MealRepository mealRepository) {
+    public MealServiceImplementation(final MealRepository mealRepository, final HistoryMealRepository historyMealRepository) {
         this.mealRepository = mealRepository;
+        this.historyMealRepository = historyMealRepository;
     }
 
     @Override
@@ -36,16 +38,38 @@ public class MealServiceImplementation implements MealService {
         }
     }
 
+    @Override
+    public ResultMessage addHistoryMeal(HistoryMealEntity historyMealEntity) {
+        try {
+            final HistoryMealEntity savedHistoryMealEntity = historyMealRepository.save(historyMealEntity);
+            String message = "Meal was added to history";
+            return new ResultMessage(message,true);
+        } catch (Exception e) {
+            String message = "Error during meal adding to history";
+            return new ResultMessage(message,false);
+        }
+    }
+
     @Transactional
     @Override
     public ResultMessage deleteMealsByUserId(Integer userId) {
         try {
+            List<MealEntity> usersMeals = getMealsByUserId(userId);
+            if (usersMeals != null) {
+                for (MealEntity meal : usersMeals) {
+                    HistoryMealEntity toAdd = mealEntityToHistoryMealEntity(meal);
+                    toAdd.setId(null);
+                    historyMealRepository.save(toAdd);
+                }
+            }
             mealRepository.deleteByUserId(userId);
             return new ResultMessage("All meals deleted successfully", true);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResultMessage("Failed to delete meals", false);
         }
     }
+
 
     @Transactional
     @Override
@@ -120,6 +144,25 @@ public class MealServiceImplementation implements MealService {
         }
 
 
+        return builder.build();
+    }
+
+    private HistoryMealEntity mealEntityToHistoryMealEntity(MealEntity mealEntity) {
+        HistoryMealEntity.HistoryMealEntityBuilder builder =HistoryMealEntity.builder()
+                .userId(mealEntity.getUserId())
+                .name(mealEntity.getName())
+                .calories(mealEntity.getCalories())
+                .protein(mealEntity.getProtein())
+                .carbs(mealEntity.getCarbs())
+                .fat(mealEntity.getFat())
+                .weightGrams(mealEntity.getWeightGrams())
+                .createdAt(mealEntity.getCreatedAt())
+                .fiber(mealEntity.getFiber())
+                .salt(mealEntity.getSalt());
+
+        if (mealEntity.getId() != null) {
+            builder.id(mealEntity.getId());
+        }
         return builder.build();
     }
 }

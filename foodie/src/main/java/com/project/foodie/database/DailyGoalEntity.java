@@ -17,11 +17,6 @@ public class DailyGoalEntity {
     @Column(name = "user_id")
     private Integer userId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    @JoinColumn(name = "user_id")
-    private UserEntity user;
-
     @Column(precision = 6, scale = 2)
     private BigDecimal calories = new BigDecimal("2000.00");
 

@@ -45,63 +45,56 @@ function Login() {
     navigate('/register');
   };
 
-  return (
-    <div>
-      <div id='LRbox'>
-        <div id='LRtitl'>Log in</div>
-        <form onSubmit={handleSubmit}>
-          <div id='LRinputs'>
-            <div>
-              <label htmlFor="email" id='LRlabelEmail'>Email</label>
-              <input
-                type="email"
-                id="LRinputEmail"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="password" id='LRlabelPass'>Password</label>
-              <input
-                type="password"
-                id="LRinputPass"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </div>
+return (
+  <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
+    <div id='LRbox'>
+      <div id='LRtitl'>Log in</div>
+      <form onSubmit={handleSubmit}>
+        <div id='LRinputs'>
+          <div>
+            <label htmlFor="email" id='LRlabelEmail'>Email</label>
+            <input
+              type="email"
+              id="LRinputEmail"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
           </div>
 
-          <div id='LRbuttons'>
-            <button
-              type="submit"
-              id='LsubLog'
-            >
-              Login
-            </button>
-
-            <button
-              type="button"
-              id='LbuttReg'
-              onClick={goToRegister}
-            >
-              Don’t have an account? Register
-            </button>
+          <div>
+            <label htmlFor="password" id='LRlabelPass'>Password</label>
+            <input
+              type="password"
+              id="LRinputPass"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
           </div>
+        </div>
 
-          {error && (
-            <div id='LRerr'>
-              {error}
-            </div>
-          )}
-        </form>
-      </div>
+        <div id='LRbuttons'>
+          <button type="submit" id='LsubLog'>
+            Login
+          </button>
+
+          <button type="button" id='LbuttReg' onClick={goToRegister}>
+            Don’t have an account? Register
+          </button>
+        </div>
+
+        {error && (
+          <div id='LRerr'>
+            {error}
+          </div>
+        )}
+      </form>
     </div>
-  );
+  </div>
+);
 }
 
 export default Login;

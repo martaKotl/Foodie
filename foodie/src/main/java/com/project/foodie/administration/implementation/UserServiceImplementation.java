@@ -20,20 +20,20 @@ import org.mindrot.jbcrypt.BCrypt;
 public class UserServiceImplementation implements UserService {
 
     private final UserRepository userRepository;
+    private final VerificationTokenRepository tokenRepository;
+    private final DailyGoalRepository goalRepository;
+    private final EmailService emailService;
 
     @Autowired
-    public UserServiceImplementation(final UserRepository userRepository) {
+    public UserServiceImplementation(UserRepository userRepository,
+                                     VerificationTokenRepository tokenRepository,
+                                     DailyGoalRepository goalRepository,
+                                     EmailService emailService) {
         this.userRepository = userRepository;
+        this.tokenRepository = tokenRepository;
+        this.goalRepository = goalRepository;
+        this.emailService = emailService;
     }
-
-    @Autowired
-    private VerificationTokenRepository tokenRepository;
-
-    @Autowired
-    private DailyGoalRepository goalRepository;
-
-    @Autowired
-    private EmailService emailService;
 
 
     @Transactional
@@ -43,7 +43,7 @@ public class UserServiceImplementation implements UserService {
         final UserEntity savedUserEntity = userRepository.save(userEntity);
 
         DailyGoalEntity goal = new DailyGoalEntity();
-        goal.setUser(savedUserEntity);
+        goal.setUserId(savedUserEntity.getId());
         goalRepository.save(goal);
 
         return userEntityToUser(savedUserEntity);
