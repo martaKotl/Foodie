@@ -21,6 +21,9 @@ public class UserEntity {
 
     private String username;
 
+    @Column(name = "sound_enabled")
+    private Boolean soundEnabled;
+
     @Column(name = "password_hash", nullable = false)
     private String password;
 

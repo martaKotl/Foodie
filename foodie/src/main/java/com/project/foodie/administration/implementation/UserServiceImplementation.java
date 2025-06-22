@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Pattern;
+import java.util.Objects;
 import org.mindrot.jbcrypt.BCrypt;
 
 @Service
@@ -121,6 +122,21 @@ public class UserServiceImplementation implements UserService {
                 })
                 .orElse(new ResultMessage("User with email \"" +email+ "\" not found", false));
 
+    }
+
+    @Override
+    public boolean updateSoundSetting(Integer userId, boolean enabled) {
+        Optional<UserEntity> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) return false;
+
+        UserEntity user = optionalUser.get();
+
+        Boolean currentSetting = user.getSoundEnabled() != null ? user.getSoundEnabled() : false;
+        if (!Objects.equals(currentSetting, enabled)) {
+            user.setSoundEnabled(enabled);
+            userRepository.save(user);
+        }
+        return true;
     }
 
     public Integer getUserIdByEmail(String email) {
