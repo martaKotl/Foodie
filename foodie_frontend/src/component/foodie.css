@@ -450,7 +450,7 @@ button[type="submit"]:hover {
   font-family: 'Press Start 2P', cursive;
   line-height:1;
   font-size: 20px;
-  margin: 20px; /* or any value you want */
+  margin: 20px;
   display: block;
 }
 
@@ -710,3 +710,59 @@ button[type="submit"]:hover {
   color: #611010;
 }
 
+/* MusicToggle */
+
+.music-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.music-modal {
+  background-color: #fdedcb;
+  border: 4px solid #8b0000;
+  padding: 20px;
+  font-family: 'Press Start 2P', cursive;
+  box-shadow: 5px 5px 0 #5e0000;
+  max-width: 400px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.music-modal h3 {
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+.music-modal label {
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.music-modal select,
+.music-modal input[type="range"],
+.music-modal button {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 12px;
+  padding: 6px 12px;
+}
+
+.music-modal select {
+  width: 90%;
+  background-color: #fffaf0;
+  border: 2px solid #8b0000;
+  box-shadow: inset 2px 2px 0 #e6d3a3;
+  color: #8b0000;
+}
