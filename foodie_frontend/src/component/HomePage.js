@@ -175,13 +175,10 @@ function HomePage() {
   return (
     <div>
       <header id='Hheader'>
-        <div>
-          <h1>FOODIE</h1>
-        </div>
-        <div id="header-buttons">
-          <button id="menu" onClick={() => setShowSidebar(true)}>☰</button>
-        </div>
+        <div>FOODIE</div>
+        <button id="menu" onClick={() => setShowSidebar(true)}>☰</button>
       </header>
+
 
       <div id="diagrams">
         <div className="cals">
