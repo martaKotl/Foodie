@@ -28,7 +28,7 @@ const BrowseRecipes = () => {
         </p>
 
         <ol className="text-left space-y-4 max-w-4xl mx-auto">
-          {recipes.map((recipe, index) => (
+          {recipes.slice(1).map((recipe, index) => (
             <li key={recipe.id}>
               <button
                 className="underline text-left hover:text-red-700"
