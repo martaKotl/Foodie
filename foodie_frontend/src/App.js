@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { MusicProvider } from './component/MusicPlayer';
 import './App.css';
 
 import Register from './component/Register';
@@ -11,6 +12,7 @@ import RecipeDetails from './component/RecipeDetails';
 import History from './component/History';
 
 
+
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = !!localStorage.getItem('userId');
   return isAuthenticated ? children : <Navigate to="/" replace />;
@@ -18,7 +20,9 @@ const ProtectedRoute = ({ children }) => {
 
 
 function App() {
+
   return (
+    <MusicProvider>
     <div className="">
       <BrowserRouter>
         <Routes>
@@ -30,11 +34,13 @@ function App() {
           <Route path="/home/add_a_meal" element={<ProtectedRoute><AddMeal /></ProtectedRoute>} />
           <Route path="/browse-recipes" element={<ProtectedRoute><BrowseRecipes /></ProtectedRoute>} />
           <Route path="/recipes/:id" element={<ProtectedRoute><RecipeDetails /></ProtectedRoute>} />
+          <Route path="/home" element={<ProtectedRoute><HomePage /></ProtectedRoute>} />
           <Route path="/home/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
-
         </Routes>
       </BrowserRouter>
+      
     </div>
+    </MusicProvider>
   );
 }
 

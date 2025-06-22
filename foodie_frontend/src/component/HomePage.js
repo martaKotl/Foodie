@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, DoughnutController } from 'chart.js';
 import MealService from '../services/MealService';  
 import DailyGoalsService from '../services/DailyGoalsService';
+import MusicToggle from "./MusicToggle";
 import HistoryService from '../services/HistoryService';
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title, DoughnutController);
@@ -17,6 +18,7 @@ function HomePage() {
   const [bmiData, setBmiData] = useState({ height: '', weight: '' });
   const [bmiResult, setBmiResult] = useState(null);
   const [surplusResult, setSurplusResult] = useState(null);
+  const [showMusicPanel, setShowMusicPanel] = useState(false);
 
   const [surplusData, setSurplusData] = useState({
     height: '', weight: '', age: '', sex: '',
@@ -404,12 +406,21 @@ function HomePage() {
           <button className='sidebarOption' id="bmi_calc" onClick={() => countBmiForm(true)}>BMI calculator</button>
           <button className='sidebarOption' id="goal_weight" onClick={() => countSurplusForm(true)}>Calculate suggested daily intake</button>
           <button className='sidebarOption' id="daily_goals" onClick={() => setShowGoalsForm(true)}>Change daily goals</button>
+          <button className='sidebarOption' onClick={() => setShowMusicPanel(!showMusicPanel)}>Music Settings</button>
           <button className='sidebarOption' id="Hlogout" onClick={() => {
             localStorage.removeItem('userId');
             navigate('/');
           }}>Logout</button>
         </div>
       )}
+
+      {showMusicPanel && (
+        <MusicToggle 
+          userId={localStorage.getItem("userId")} 
+          onClose={() => setShowMusicPanel(false)} 
+        />
+      )}
+
     </div>
   );
 }
