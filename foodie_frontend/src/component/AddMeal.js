@@ -234,7 +234,12 @@ function AddMeal() {
           min="0"
           className="input-box"
           value={grams}
-          onChange={e => setGrams(e.target.value)}
+          onChange={e => {
+            const value = Number(e.target.value);
+            if (value >= 0 || e.target.value === '') {
+              setGrams(e.target.value);
+            }
+          }}
         />
         <span id='Agrams'> g</span>
       </div>
@@ -250,11 +255,14 @@ function AddMeal() {
               id={`macro-${label.toLowerCase()}`}
               className="input-box macro-input"
               value={
-                isEditing && grams
-                  ? ((parseFloat(per100gRef.current[label]) || 0) * parseFloat(grams) / 100).toFixed(2)
-                  : macros[label]
+              macros[label]
               }
-              onChange={e => handleMacroChange(label, e.target.value)}
+              onChange={e => {
+                const value = Number(e.target.value);
+                if (value >= 0 || e.target.value === '') {
+                  handleMacroChange(label, e.target.value);
+                }
+              }}
             />
             <span>g</span>
           </div>
