@@ -12,9 +12,22 @@ class UserService {
     }
 
     loginUser(email, password) {
-        //console.log(email, password)
         return axios.post(`${Foodie_base_URL}/login`, { email, password });
     }
+    
+    getUser(userId) {
+        return axios.get(`${Foodie_base_URL}/users/${userId}`);
+    }
+
+    updateSoundSetting(userId, enabled) {
+        return axios.patch(`${Foodie_base_URL}/users/${userId}/sound`, null, {
+            params: {
+            enabled: enabled
+            }
+        });
+    }
+
+
 }
 
 export default new UserService();

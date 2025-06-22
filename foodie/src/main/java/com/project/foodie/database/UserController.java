@@ -93,6 +93,27 @@ public class UserController {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<UserEntity> getUserById(@PathVariable Integer id) {
+        
+        return userRepository.findById(id)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.status(404).build());
+    }
+
+    @PatchMapping("/{id}/sound")
+    public ResponseEntity<ResultMessage> updateSoundSetting(
+            @PathVariable Integer id,
+            @RequestParam boolean enabled) {
+        
+        boolean updated = userService.updateSoundSetting(id, enabled);
+        if (updated) {
+            return ResponseEntity.ok(new ResultMessage("Sound setting updated", true));
+        } else {
+            return ResponseEntity.status(404).body(new ResultMessage("User not found", false));
+        }
+    }
+
 }
 
 
