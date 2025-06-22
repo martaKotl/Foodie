@@ -49,15 +49,16 @@ export default function MusicToggle({ onClose }) {
           onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
         />
 
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div id="musica">
           <button onClick={handleMuteToggle} className="font-retro">
             {muted ? '🔊 Unmute' : '🔇 Mute'}
           </button>
-          <button onClick={handleCancel} className="cancelButton font-retro">
+          <button onClick={handleCancel} className="cancelButton">
             Cancel
           </button>
         </div>
       </div>
     </div>
   );
+  
 }
