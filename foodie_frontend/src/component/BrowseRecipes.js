@@ -18,26 +18,23 @@ const BrowseRecipes = () => {
   };
 
   return (
-    <div className="min-h-screen font-['Press_Start_2P'] text-sm text-red-900 flex justify-center items-start pt-8">
-      <div className="bg-yellow-100 text-center px-4 py-6 sm:px-8 rounded-xl shadow-lg max-w-4xl w-full">
-        <h1 className="text-3xl mb-4">Browse Recipes</h1>
-        <p className="mb-6">
-          <span className="cursor-pointer underline" onClick={() => navigate("/home")}>
-            ← Go to home page
-          </span>
+    <div className="BRcont">
+      <div className="BRcont2">
+        <h1 className="heading">Browse Recipes</h1>
+        <p className="par">
         </p>
 
-        <ol className="text-left space-y-4 max-w-4xl mx-auto">
+        <ol className="BRlist">
           {recipes.slice(1).map((recipe, index) => (
             <li key={recipe.id}>
               <button
-                className="underline text-left hover:text-red-700"
+                className="BRbutton"
                 onClick={() => toggleDetails(recipe.id)}
               >
                 {index + 1}. {recipe.name}
               </button>
               {openRecipeId === recipe.id && (
-                <div className="pl-4 pt-1 text-red-800 text-xs">
+                <div className="BRdetails">
                   <p>{recipe.caloriesPer100g} kcal</p>
                   <p>{recipe.proteinPer100g}g protein</p>
                   <p>{recipe.carbsPer100g}g carbs</p>
@@ -50,6 +47,9 @@ const BrowseRecipes = () => {
             </li>
           ))}
         </ol>
+        <span className="BRback" onClick={() => navigate("/home")}>
+            Go back to home page
+          </span>
       </div>
     </div>
   );
