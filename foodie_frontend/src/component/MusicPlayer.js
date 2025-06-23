@@ -1,12 +1,11 @@
-// src/component/MusicPlayer.js
 import React, { createContext, useState, useRef, useEffect } from 'react';
 
 export const MusicContext = createContext();
 
 const tracks = [
-  { name: 'Sugar,Sugar - The Archies', src: '/soundtrack1.mp3' },
-  { name: 'Dancing Queen - ABBA', src: '/soundtrack2.mp3' },
-  { name: 'Stayin Alive - Bee Gees', src: '/soundtrack3.mp3' }
+  { name: 'Bite The Beat', src: '/Bite-the-Beat.mp3' },
+  { name: 'Dancing Bite', src: '/Bite-the-Beat.mp3' },
+  { name: 'Stayin Full', src: '/Bite-the-Beat.mp3' }
 ];
 
 export const MusicProvider = ({ children }) => {
