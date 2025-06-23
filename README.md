@@ -1,6 +1,3 @@
-# Prerequirements:
-- Visual Studio Code (https://code.visualstudio.com/docs/setup/linux)
-
 # Database instalation and configuration:
 ### Open terminal and use these commands:
 ```
@@ -16,7 +13,7 @@ sudo apt install postgresql-17
 
 sudo -u postgres psql
 CREATE DATABASE "Foodie";
-ALTER USER postgres WITH PASSWORD 'DB2025'; ******
+ALTER USER postgres WITH PASSWORD 'DB2025';
 \q
 
 cp ~/Desktop/Foodie/database/foodie_init.sql /tmp/
