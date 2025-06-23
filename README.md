@@ -30,23 +30,32 @@ sudo -u postgres psql -d Foodie -f /tmp/foodie_init.sql
 ```
 git clone https://github.com/martaKotl/Foodie.git
 ```
-3. Install java and set the version you installed to your JAVA_HOME and PATH variables
+3. Install Java, Maven and Node.js. Set the version of Java you installed to your JAVA_HOME and PATH variables
 ```
 sudo apt update
 sudo apt install openjdk-17-jdk
+sudo apt install maven
+sudo apt install nodejs npm
 
 export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 export PATH=$JAVA_HOME/bin:$PATH
 ```
-4. Install Maven
+
+5. Go into the Foodie/foodie directory and run the commands to build the project
 ```
-sudo apt update
-sudo apt install maven
-```
-5. Open Visual Studio Code and open the Foodie folder
-6. Open a new VS Code terminal window and set it to a bash terminal
-7. In the VS Code terminal change the directory of the terminal to the Foodie folder run this command to build the project
-```
-cd ~/Desktop/Foodie
 mvn clean install
+```
+6. Go into the Foodie/foodie_frontend and run the command
+```
+npm install
+```
+
+7. Start the project
+(In Foodie/foodie)
+```
+mvn spring-boot:run
+```
+(In Foodie/foodie_frontend)
+```
+npm start
 ```
