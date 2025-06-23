@@ -16,7 +16,7 @@ sudo apt install postgresql-17
 
 sudo -u postgres psql
 CREATE DATABASE "Foodie";
-ALTER USER postgres WITH PASSWORD 'DB2025';
+ALTER USER postgres WITH PASSWORD 'DB2025'; ******
 \q
 
 cp ~/Desktop/Foodie/database/foodie_init.sql /tmp/
@@ -25,7 +25,11 @@ sudo -u postgres psql -d Foodie -f /tmp/foodie_init.sql
 ```
 
 # App instalation steps:
-1. Install git (sudo apt update; sudo apt install git)
+1. Install git
+```
+sudo apt update
+sudo apt install git
+```
 2. Clone this repository onto your machine:
 ```
 git clone https://github.com/martaKotl/Foodie.git
@@ -41,7 +45,7 @@ export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 export PATH=$JAVA_HOME/bin:$PATH
 ```
 
-5. Go into the Foodie/foodie directory and run the commands to build the project
+4. Go into the Foodie/foodie directory and run the commands to build the project
 ```
 mvn clean install
 ```
@@ -50,12 +54,12 @@ mvn clean install
 npm install
 ```
 
-7. Start the project
-(In Foodie/foodie)
+# Starting the project
+Run this command in Foodie/foodie directory
 ```
 mvn spring-boot:run
 ```
-(In Foodie/foodie_frontend)
+Run this command in Foodie/foodie_frontend directory (in a new terminal window)
 ```
 npm start
 ```
